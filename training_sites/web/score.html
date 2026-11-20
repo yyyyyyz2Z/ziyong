@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在本机识别 PDF 五线谱或导入 MusicXML，选段并导出参考 MIDI。">
+  <title>乐谱选段 · 钢琴研究工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/score.js"></script>
+</head>
+<body class="score-theme">
+  <header class="site-header"><div class="shell masthead">
+    <a class="brand" href="/"><span class="keys" aria-hidden="true"><i></i><i></i><i></i></span>钢琴研究工作台</a>
+    <span class="local">本地运行 · 乐谱工具</span>
+  </div></header>
+  <main class="shell">
+    <section class="hero">
+      <div><h1>乐谱选段</h1><p>导入 PDF 五线谱或 MusicXML，选择连续小节，预览音高与时长并导出参考 MIDI。</p></div>
+      <dl class="hero-formats"><div><dt>输入</dt><dd>PDF / MusicXML</dd></div><div><dt>输出</dt><dd>MIDI</dd></div></dl>
+    </section>
+    <div class="workbench">
+      <section class="panel input-panel" aria-labelledby="input-title">
+        <h2 id="input-title">导入乐谱</h2>
+        <label class="file-field" for="score-file"><span>选择乐谱文件</span><input id="score-file" type="file" accept=".pdf,.musicxml,.mxl,.xml"></label>
+        <p id="pdf-capability" class="field-note" aria-live="polite"></p>
+        <div class="form-actions"><button id="demo-score" type="button" class="button secondary">载入合成示例</button><button id="download-recognition" type="button" class="button text-button" hidden>下载识谱结果</button></div>
+        <p id="score-source" class="file-summary" aria-live="polite">等待导入</p>
+        <hr>
+        <h2>选择范围</h2>
+        <form id="excerpt-form">
+          <div class="two-fields">
+            <label for="first">起始位置<input id="first" type="number" min="1" value="1" required disabled></label>
+            <label for="last">结束位置<input id="last" type="number" min="1" value="1" required disabled></label>
+          </div>
+          <p class="field-note">位置从谱面第一个小节起计数，包含两端。反复按书面顺序走一遍。</p>
+          <button class="button primary full" id="generate" type="submit" disabled>生成参考 MIDI</button>
+        </form>
+        <p id="score-status" class="status" role="status"></p>
+      </section>
+      <section class="panel chart-panel" aria-labelledby="measure-title">
+        <div class="panel-head"><div><h2 id="measure-title">小节导航</h2><p class="field-note" id="range-note">导入后可点选开始和结束小节。</p></div><span id="part-count" class="tag" hidden></span></div>
+        <div id="measures" class="measure-map"></div>
+        <div class="panel-head preview-head"><div><h2>片段钢琴卷帘</h2><p id="excerpt-caption" class="field-note">每条横线代表一个音符。</p></div><button class="button secondary" type="button" id="download-midi" disabled>下载 MIDI</button></div>
+        <div id="score-metrics" class="stats" hidden></div>
+        <div id="score-empty" class="empty-plot"><span>片段预览将在这里显示</span></div>
+        <div id="score-chart" class="chart" aria-label="所选片段的音高和时长" hidden></div>
+        <p id="tempo-summary" class="field-note"></p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

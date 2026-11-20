@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在浏览器中用 pianoCV 检测视频画面的琴键轮廓并导出坐标。">
+  <title>pianoCV 琴键轮廓测试台</title>
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <header class="top"><div class="shell top-inner">
+    <a class="brand" href="/" aria-label="pianoCV 视频测试首页"><span class="key-icon" aria-hidden="true"><i></i><i></i><i></i></span><span>pianoCV <small>视频测试</small></span></a>
+    <a class="source-link" href="https://github.com/matheusfillipe/pianoCV" target="_blank" rel="noreferrer">上游项目</a>
+  </div></header>
+  <main class="shell">
+    <section class="intro"><h1>琴键轮廓测试台</h1><p>选择一段俯视或轻微侧视的视频，定位到键盘清晰的画面，再识别逐键轮廓。</p></section>
+    <div class="workspace">
+      <section class="panel viewer" aria-labelledby="preview-title">
+        <div class="panel-header"><div><h2 id="preview-title">视频预览</h2><p class="file-name" id="file-name">等待选择本地视频</p></div><label class="button secondary upload" for="video-file">选择视频<input class="file-input" id="video-file" type="file" accept="video/*,.mp4,.webm,.mov,.m4v" disabled></label></div>
+        <div id="stage" class="stage">
+          <div id="empty-stage" class="empty-stage"><div class="viewfinder" aria-hidden="true"><span></span></div><p>将视频拖到这里</p><span>MP4、WebM 或浏览器可播放的视频</span></div>
+          <video id="video" preload="metadata" playsinline muted hidden></video>
+          <canvas id="overlay" hidden aria-hidden="true"></canvas>
+        </div>
+        <div class="transport" id="transport" hidden>
+          <button class="button secondary play" id="play" type="button" aria-label="播放视频">播放</button>
+          <input type="range" id="seek" min="0" max="1" step="0.001" value="0" aria-label="视频时间">
+          <output id="timestamp" for="seek">00:00.000 / 00:00.000</output>
+        </div>
+        <div class="viewer-footer"><span>视频保留在你的浏览器中</span><span id="resolution"></span></div>
+      </section>
+      <aside class="sidebar">
+        <section class="panel controls" aria-labelledby="detect-title">
+          <div class="section-heading"><h2 id="detect-title">当前帧识别</h2><span class="engine" id="engine" aria-live="polite">KeyNet</span></div>
+          <button class="button primary" id="analyze" type="button" disabled>识别当前帧</button>
+          <p id="status" class="status" role="status">选择视频后，可暂停在键盘无遮挡的位置。</p>
+          <div class="options">
+            <label><input id="outlines" type="checkbox" checked> 显示琴键边线</label>
+            <label><input id="labels" type="checkbox"> 显示音名或键序</label>
+          </div>
+          <div class="midi-field"><label for="first-pitch">最低键 MIDI 编号</label><input id="first-pitch" type="number" min="0" max="127" step="1" inputmode="numeric" placeholder="可选，例如 21"><p class="hint" id="pitch-hint">局部键盘可手动指定识别范围的最低音。</p></div>
+        </section>
+        <section class="panel result" aria-labelledby="result-title">
+          <div class="section-heading"><h2 id="result-title">琴键结果</h2><span id="result-frame" class="engine"></span></div>
+          <div class="result-counts"><div><strong id="key-total">—</strong><span>琴键</span></div><div><strong id="key-white">—</strong><span><i class="mark white"></i>白键</span></div><div><strong id="key-black">—</strong><span><i class="mark black"></i>黑键</span></div></div>
+          <p class="key-detail" id="key-detail" role="status">识别后可悬停查看单键。</p>
+          <button class="button secondary export" id="export" type="button" disabled>下载轮廓 JSON</button>
+        </section>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

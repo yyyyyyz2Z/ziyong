@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用带逐音标签的样本校准钢琴时间对齐参数，查看独立验证曲目结果。">
+  <title>演奏对齐训练 · 钢琴研究工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/alignment.js"></script>
+</head>
+<body class="alignment-theme">
+  <header class="site-header"><div class="shell masthead">
+    <a class="brand" href="/"><span class="keys" aria-hidden="true"><i></i><i></i><i></i></span>钢琴研究工作台</a>
+    <span class="local">本地运行 · 对齐实验</span>
+  </div></header>
+  <main class="shell">
+    <section class="hero">
+      <div><h1>演奏对齐训练</h1><p>用带逐音标签的片段校准速度自适应参数，再用留出的曲目检验匹配表现。</p></div>
+      <dl class="hero-formats"><div><dt>输入</dt><dd>带标签的 JSON</dd></div><div><dt>输出</dt><dd>模型参数 / 验证结果</dd></div></dl>
+    </section>
+    <div class="mode-bar" aria-label="工作模式">
+      <button id="mode-train" class="button switch" type="button" aria-pressed="true">训练与验证</button>
+      <button id="mode-pair" class="button switch" type="button" aria-pressed="false">两份 MIDI 对齐</button>
+    </div>
+    <div class="workbench">
+      <div class="sidebar">
+        <section class="panel input-panel" id="train-panel" aria-labelledby="train-title">
+          <h2 id="train-title">导入带标签的片段</h2>
+          <label class="file-field" for="dataset-file"><span>选择训练集 JSON</span><input id="dataset-file" type="file" accept=".json,application/json"></label>
+          <div class="form-actions">
+            <button id="demo-dataset" type="button" class="button secondary">载入合成示例</button>
+            <button id="download-dataset" type="button" class="button text-button">下载示例格式</button>
+          </div>
+          <p id="dataset-summary" class="file-summary">等待导入</p>
+          <details><summary>训练数据和标签</summary><p class="field-note">用同一片段的参考 MIDI 和演奏 MIDI 生成模板。逐个核对建议配对，把正确的一对写到 <code>matches</code>。例如 <code>r0003</code> 对应 <code>p0004</code>。漏弹或多弹的音符保留在原列表里，不建立配对。同一曲目共用 <code>piece_id</code>，训练集至少包含两首曲目。</p></details>
+          <button id="train" type="button" class="button primary full" disabled>开始训练与验证</button>
+        </section>
+        <section class="panel input-panel" id="pair-panel" aria-labelledby="pair-title" hidden>
+          <h2 id="pair-title">导入同一段的两份 MIDI</h2>
+          <label class="file-field" for="reference-file"><span>参考乐谱 MIDI</span><input id="reference-file" type="file" accept=".mid,.midi"></label>
+          <label class="file-field" for="performance-file"><span>实际演奏 MIDI</span><input id="performance-file" type="file" accept=".mid,.midi"></label>
+          <label class="file-field" for="model-file"><span>已训练参数 JSON（可选）</span><input id="model-file" type="file" accept=".json,application/json"></label>
+          <p id="model-summary" class="field-note">使用默认参数。训练后会自动采用本次选出的参数。</p>
+          <button id="align" type="button" class="button primary full" disabled>运行速度自适应对齐</button>
+        </section>
+        <p id="align-status" class="status" role="status"></p>
+      </div>
+      <div class="result-stack">
+        <section id="validation-panel" class="panel chart-panel" aria-labelledby="validate-title">
+          <div class="panel-head"><div><h2 id="validate-title">留出曲目验证</h2><p class="field-note" id="split-summary">同一曲目的不同演奏会留在同一组。</p></div><span class="tag" id="result-source" hidden></span></div>
+          <div id="validation-bars" class="validation-bars"></div>
+          <div id="validation-empty" class="empty-plot compact"><span>训练完成后显示匹配精确率、召回率和 F1</span></div>
+          <div id="train-results" hidden>
+            <details><summary>查看参数搜索和所选参数</summary><p class="field-note" id="parameter-summary"></p><div class="trial-wrap"><table><thead><tr><th>和弦窗口</th><th>锚点相似度</th><th>时间容差</th><th>训练 F1</th></tr></thead><tbody id="trial-rows"></tbody></table></div></details>
+            <div class="form-actions"><button id="download-model" type="button" class="button secondary">下载模型参数</button><button id="download-report" type="button" class="button text-button">下载验证结果</button></div>
+          </div>
+        </section>
+        <section class="panel chart-panel" aria-labelledby="example-title">
+          <div class="panel-head"><div><h2 id="example-title">片段对齐</h2><p class="field-note" id="example-caption">选择验证曲目查看时间映射与逐音匹配。</p></div><label class="select-label" id="sample-label" hidden>验证片段<select id="sample"></select></label></div>
+          <div id="example-empty" class="empty-plot"><span>片段的时间映射将在这里显示</span></div>
+          <div id="example-plots" hidden>
+            <div id="mapping" class="chart" aria-label="谱面时间映射到演奏时间"></div>
+            <div class="plot-legend"><span><i class="legend-fixed"></i>固定偏移</span><span><i class="legend-adaptive"></i>速度自适应</span><span><i class="legend-anchor"></i>锚点</span><span id="truth-key"><i class="legend-truth"></i>标签对应点</span></div>
+            <div class="panel-head preview-head"><div><h3>同一时间轴上的音符</h3><p class="field-note">上方为映射后的参考起音，下方为实际演奏。横条长度为原始时值。</p></div></div>
+            <div id="matched-roll" class="chart" aria-label="参考音符与演奏音符的对照卷帘"></div>
+            <div class="plot-legend"><span><i class="legend-adaptive"></i>已匹配音符</span><span><i class="legend-unmatched"></i>未匹配音符</span></div>
+            <p id="match-summary" class="field-note"></p>
+            <div class="form-actions" id="pair-results" hidden><button id="download-template" type="button" class="button secondary">下载待标注模板</button><button id="download-pair" type="button" class="button text-button">下载对齐结果</button></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

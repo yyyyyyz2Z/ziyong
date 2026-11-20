@@ -1,0 +1,19 @@
+{
+  "name": "pianocv-video-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "model": "node scripts/download-model.mjs",
+    "dev": "npm run model && vite --host 127.0.0.1 --port 8763 --strictPort",
+    "build": "npm run model && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8763 --strictPort"
+  },
+  "dependencies": {
+    "onnxruntime-web": "1.29.0",
+    "pianocv": "0.5.3"
+  },
+  "devDependencies": {
+    "vite": "6.4.2"
+  }
+}

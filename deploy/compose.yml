@@ -1,0 +1,64 @@
+name: piano-coach
+
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: piano
+      MYSQL_USER: piano
+      MYSQL_PASSWORD: ${PIANO_DB_PASSWORD:?Set PIANO_DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${PIANO_DB_ROOT_PASSWORD:?Set PIANO_DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
+      start_period: 10s
+    volumes:
+      - database:/var/lib/mysql
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PIANO_BIND: 0.0.0.0
+      PIANO_DB_HOST: db
+      PIANO_DB_PASSWORD: ${PIANO_DB_PASSWORD:?Set PIANO_DB_PASSWORD}
+      PIANO_SECRET_KEY: ${PIANO_SECRET_KEY:?Set PIANO_SECRET_KEY}
+      PIANO_ADMIN_USERNAME: ${PIANO_ADMIN_USERNAME:-admin}
+      PIANO_ADMIN_PASSWORD: ${PIANO_ADMIN_PASSWORD:-}
+      PIANO_COOKIE_SECURE: ${PIANO_COOKIE_SECURE:-0}
+      PIANO_IMPORT_LEGACY: ${PIANO_IMPORT_LEGACY:-0}
+    volumes:
+      - media:/srv/piano/outputs/api
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 4s
+      retries: 10
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      PIANO_DOMAIN: ${PIANO_DOMAIN:-http://localhost}
+    ports:
+      - "${PIANO_LISTEN_IP:-127.0.0.1}:${PIANO_HTTP_PORT:-8080}:80"
+      - "${PIANO_LISTEN_IP:-127.0.0.1}:${PIANO_HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - certificates:/data
+
+volumes:
+  database:
+  media:
+  certificates:
