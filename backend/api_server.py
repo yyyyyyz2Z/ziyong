@@ -33,9 +33,10 @@ def main():
     artifacts.mark_interrupted_jobs()
 
     assets = AssetService(artifacts, database)
+    coach = CoachService(database, artifacts)
     handler = partial(
-        WorkspaceHandler, accounts=accounts, assets=assets, jobs=JobService(artifacts, assets, ROOT),
-        coach=CoachService(database, artifacts), practice=PracticeService(database, artifacts),
+        WorkspaceHandler, accounts=accounts, assets=assets, jobs=JobService(artifacts, assets, ROOT, coach),
+        coach=coach, practice=PracticeService(database, artifacts),
         static_root=(ROOT / "frontend" / "dist" / "client").resolve(),
         secure_cookies=os.environ.get("PIANO_COOKIE_SECURE") == "1",
     )

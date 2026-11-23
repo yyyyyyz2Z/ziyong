@@ -77,6 +77,9 @@ class ArtifactStore:
             if job["status"] in ("queued", "running"):
                 job.update(status="failed", error="服务曾中断，请重新提交")
                 self.write_json(path, job)
+        for path in self.root.glob("*/overview.json"):
+            if self.read_json(path).get("status") == "pending":
+                self.write_json(path, {"status": "available"})
 
     def import_legacy(self, owner):
         resources = []

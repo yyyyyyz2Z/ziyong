@@ -15,6 +15,8 @@ from .aligned_landmarks import process as extract_landmarks
 from .fingering_match import assign_fingers, keyboard_regions
 from .hand_tracking import draw_tracked_skeletons
 from .predict_fingering import TIP_INDEX_TO_FINGER
+from .score_review import analyze_passage
+from .technique_graph import analyze_exercise, supports_exercise
 
 
 FINGER_TO_TIP = {finger: tip for tip, finger in TIP_INDEX_TO_FINGER.items()}
@@ -128,6 +130,7 @@ def main():
     to_keyboard, regions = keyboard_regions(mapping, keys)
     fps = info["fps"]
     visible_notes = [row for row, visible in zip(aligned, in_video) if visible]
+    technique = None
 
     # Keep the full replay track on disk while retaining only finger-scoring
     # windows in memory. A single tracking pass provides both sets of points.
@@ -158,8 +161,18 @@ def main():
             writer = csv.DictWriter(stream, fieldnames=list(predictions[0]))
             writer.writeheader()
             writer.writerows(predictions)
+        exercise = mapping.get("exercise")
+        if supports_exercise(exercise):
+            technique = analyze_exercise(predictions, track, to_keyboard, regions, fps, args.offset, exercise)
         render_replay(video, output / "fingering_replay.mp4", info, track, predictions, matches, regions)
 
+    score_passage = output / "score_passage.json"
+    score_status = None
+    if score_passage.is_file():
+        passage = json.loads(score_passage.read_text(encoding="utf-8"))
+        comparison = analyze_passage(passage, predictions, args.offset)
+        (output / "score_alignment.json").write_text(json.dumps(comparison, ensure_ascii=False, indent=2), encoding="utf-8")
+        score_status = comparison["status"]
     counts = {status: sum(row["status"] == status for row in predictions)
               for status in ("matched", "uncertain", "unmatched")}
     summary = {
@@ -170,7 +183,10 @@ def main():
         "notes": len(notes), "status_counts": counts,
         "coverage": round(counts["matched"] / len(notes), 4),
         "mean_geometric_support": round(float(np.mean([row["confidence"] for row in predictions])), 4),
-        "mirrored": mirrored, "algorithm_version": "key-region-v1",
+        "mirrored": mirrored, "algorithm_version": "pianocv-key-region-v1" if mapping.get("source") else "key-region-v1",
+        "keyboard_source": mapping.get("source", "legacy_calibration"),
+        "technique": technique,
+        "score_alignment_status": score_status,
         "algorithm": "MediaPipe Hands; rectified key regions; multi-frame contact scoring and chord assignment",
         "score": None, "score_note": "No validated performance score is computed. Geometric support is not accuracy.",
     }

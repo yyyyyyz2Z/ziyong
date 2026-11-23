@@ -1,9 +1,14 @@
 from datetime import datetime, timezone
+from pathlib import Path
+import os
+from tempfile import TemporaryDirectory
 
 import cv2
 import pretty_midi
 
 from ..analysis.calibration import read_frame, suggest_corners
+from ..analysis.score_review import score_document
+from ..analysis.score_recognition import find_audiveris, recognize_pdf
 from .errors import UploadSizeError
 
 
@@ -23,17 +28,45 @@ class AssetService:
         return folder, self.artifacts.read_json(folder / "asset.json")
 
     def upload(self, owner, kind, filename, stream, size, *, library):
-        if not 0 < size <= 512 * 1024 * 1024:
-            raise UploadSizeError("文件大小须为 1 字节至 512 MB")
-        identifier, folder = self.artifacts.create_folder()
-        path = folder / ASSET_FILES[kind]
-        self.artifacts.write_upload(path, stream, size)
+        maximum_mb = 10 if kind == "score" else 512
+        if not 0 < size <= maximum_mb * 1024 * 1024:
+            raise UploadSizeError(f"文件大小须为 1 字节至 {maximum_mb} MB")
         title = filename.replace("\\", "/").rsplit("/", 1)[-1]
+        suffix = Path(title).suffix.lower()
+        if kind == "score" and suffix not in (".pdf", ".png", ".jpg", ".jpeg", ".musicxml", ".xml", ".mxl"):
+            raise ValueError("请选择 PDF、乐谱图片或 MusicXML 文件")
+        identifier, folder = self.artifacts.create_folder()
+        path = folder / (f"input{suffix}" if kind == "score" else ASSET_FILES[kind])
+        self.artifacts.write_upload(path, stream, size)
         metadata = dict(
             id=identifier, kind=kind, name=title[:240], created_at=datetime.now(timezone.utc).isoformat(),
             library=kind == "midi" and library,
         )
-        metadata.update(video_metadata(path) if kind == "video" else midi_metadata(path))
+        if kind == "score":
+            if suffix in (".pdf", ".png", ".jpg", ".jpeg"):
+                content = path.read_bytes()
+                if suffix != ".pdf":
+                    from PIL import Image
+                    from io import BytesIO
+                    with Image.open(BytesIO(content)) as image:
+                        if image.width * image.height > 40000000:
+                            raise ValueError("乐谱图片过大，请缩小到 4000 万像素以内")
+                        buffer = BytesIO()
+                        image.convert("RGB").save(buffer, format="PDF")
+                        content = buffer.getvalue()
+                with TemporaryDirectory(dir=folder) as temporary:
+                    extension, content = recognize_pdf(content, find_audiveris(os.environ.get("PIANO_AUDIVERIS")), Path(temporary))
+                path = folder / f"recognized{extension}"
+                path.write_bytes(content)
+                metadata["recognizer"] = "Audiveris"
+            document = score_document(path)
+            document["title"] = document["title"] or Path(title).stem[:240]
+            self.artifacts.write_json(folder / "score.json", document)
+            metadata.update(title=document["title"], measures=document["measures"])
+        elif kind == "video":
+            metadata.update(video_metadata(path))
+        else:
+            metadata.update(midi_metadata(path))
         self.artifacts.write_json(folder / "asset.json", metadata)
         self.artifacts.register(owner, identifier, "asset", metadata if metadata["library"] else None)
         return metadata

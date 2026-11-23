@@ -7,7 +7,12 @@ from urllib.error import URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 from uuid import uuid4
+from threading import Lock
 
+from ..analysis.technique_graph import segment_evidence
+from ..analysis.score_review import score_guidance, score_segment
+from ..analysis.score_revisions import effective_report
+from ..analysis.performance_graph import graph_segment
 from .errors import AccessDenied
 
 
@@ -67,10 +72,29 @@ def make_evidence(artifacts, path, start, end, selected):
                 "id": row["note_index"], "name": row["note_name"], "time": round(time, 3),
                 "status": row["status"], "hand": row["hand"], "finger": row["finger"],
             })
-    return {
+    evidence = {
         "start": start, "end": end, "mode": summary.get("mode", "fingering"),
         "counts": counts, "notes": notes, "total": sum(counts.values()), "selected_note_ids": selected,
     }
+    report = summary.get("technique")
+    graph = segment_evidence(report, start, end, selected) if report else None
+    if graph:
+        evidence["technique"], evidence["technique_references"] = graph
+    alignment = path / "score_alignment.json"
+    if alignment.is_file():
+        report = effective_report(artifacts.read_json(alignment), artifacts.note_rows(path), offset)
+        segment = score_segment(report, start, end, selected)
+        if segment:
+            rules, references = score_guidance(segment)
+            evidence["score_alignment"] = dict(segment, rules=rules)
+            if references:
+                evidence["score_references"] = references
+    graph = path / "performance_graph.json"
+    if graph.is_file():
+        document = artifacts.read_json(graph)
+        evidence["performance"] = graph_segment(document, start, end, selected)
+        evidence["score_references"] = document.get("references", [])
+    return evidence
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -82,10 +106,34 @@ def ask_model(question, evidence, sources, config, plan=False):
     instructions = (
         "你是钢琴练习助手，用简体中文回答。输入 JSON 的 question 是用户问题，evidence 是服务端"
         "从同一次分析提取的有限证据，references 是检索到的通用练习资料。"
-        "只在证据支持时描述该次演奏，并用给定时间戳定位。matched 表示几何候选，"
-        "uncertain 和 unmatched 仅表示识别不确定。没有看到或听到原始视频，"
-        "不得声称知道实际弹错的音、姿势诊断、能力分数或改善结论。"
+        "用自然、亲切且具体的钢琴教师语气回答，先回应用户关心的音乐表现，再给练法。"
+        "优先使用有依据的观察，并用给定时间戳定位。matched 表示几何候选，"
+        "uncertain 和 unmatched 是内部识别状态，不代表演奏问题。"
+        "按证据区分自动候选和人工已确认的音高差异。姿势诊断、能力分数和改善结论需要另外的数据。"
         "区分数据观察和通用建议。用短段落给出一到两条可执行练习。不要编造资料或音符。"
+        "有 technique 时，结合片段内 MIDI 起音、琴键位置、手部观测和图谱规则回答。"
+        "使用证据给出的音符、手别与参考指法。间隔比例以同遍其他等时值间隔的中位数为基准。"
+        "角度是图像中落键指的二维投影，右手下行 1→3 应描述中指。"
+        "准备提前量是待复核的估计。只在给出数值时引用，不由遮挡、单次观测或未校准阈值推断技术缺陷。"
+        "阐述研究背景时按相应图谱规则的 reference_ids 引用资料编号，说明其适用范围。"
+        "把参考指法差异写成回看线索。多遍统计是观察值，只有给定相同目标速度时才论及同速复练。"
+        "有 score_alignment 时，用行内小节号、拍点、预计或实际视频时间回答。"
+        "注意区分同音高匹配、疑似漏音、疑似多弹及疑似替换音。review 表示需要核对的音符，"
+        "pitch_confirmed、missing_confirmed、extra_confirmed 是人工确认。manual_review 标记 misaligned、"
+        "variant 或 unclear 时，说明复核原因并避免将这个位置描述为已确认的演奏错误。"
+        "missing_candidate 的时间仅是由对齐估算的回看位置。timing_delta_ms 是相对于局部速度映射的偏差。"
+        "参考指法可来自谱面或人工标注，多个 reference_fingers 是可接受的备选。"
+        "缺少参考指法时，围绕手指衔接和分组练习给出建议。"
+        "对用户避免机械地说‘数据不确定’‘没有数据’‘无法判断’‘证据不足’，"
+        "可自然表述为‘这一处可以重点听相邻两音是否连贯，再用慢速连接练习体会’。"
+        "信息有限时把结论调整为练习建议或回看提示，不能补造观察、数值和技术缺陷。"
+        "有 performance 时，这是整段视频中谱面音符、音轨起音、手指关键点和琴键关联构成的知识图谱。"
+        "summary 聚合了选择范围内的全部音符，events 只是均匀采样。"
+        "same_piece_complete 表示用户按同一曲目完整弹奏的前提，score_linked 只表示谱面关联。"
+        "timing_source=audio 的音符才有实测起音指标，score_projection 供定位。"
+        "不能从上传的参考 MIDI 推断真实演奏力度、节奏稳定性或正确率。"
+        "全曲评价覆盖开头、中段和结尾，给出整体表现、优先关注的位置和两到三条练法。"
+        "只在对应实测观察支持时评价节奏和指法表现，避免虚构听感、表情、踏板或能力分数。"
     )
     if plan:
         instructions += (
@@ -98,7 +146,9 @@ def ask_model(question, evidence, sources, config, plan=False):
         "messages": [
             {"role": "system", "content": instructions},
             {"role": "user", "content": json.dumps(
-                {"question": question, "evidence": evidence, "references": sources}, ensure_ascii=False
+                {"question": question, "evidence": {k: v for k, v in evidence.items()
+                                                     if k not in ("technique_references", "score_references")}
+                 if evidence else None, "references": sources}, ensure_ascii=False
             )},
         ],
     }
@@ -118,10 +168,12 @@ def ask_model(question, evidence, sources, config, plan=False):
         raise RuntimeError("模型请求失败。请检查服务地址、模型、密钥或额度，再重试。") from None
 
 
-def related_sources(question):
+def related_sources(question, evidence=None):
     lower = question.lower()
     ranked = sorted(KNOWLEDGE, key=lambda item: sum(tag in lower for tag in item["tags"]), reverse=True)
-    return [{k: item[k] for k in ("id", "title", "url", "tip")} for item in ranked[:2]]
+    general = [{k: item[k] for k in ("id", "title", "url", "tip")} for item in ranked[:2]]
+    combined = (evidence or {}).get("technique_references", []) + (evidence or {}).get("score_references", []) + general
+    return list({item["id"]: item for item in combined}.values())
 
 
 def create_message(data, job_path, config, artifacts):
@@ -138,7 +190,7 @@ def create_message(data, job_path, config, artifacts):
     if data.get("send") is True:
         if not config:
             raise ValueError("模型未配置，可先保存问题草稿")
-        sources = related_sources(question)
+        sources = related_sources(question, evidence)
         message.update(answer=ask_model(question, evidence, sources, config), references=sources, status="answered")
     return message
 
@@ -146,9 +198,19 @@ def create_message(data, job_path, config, artifacts):
 def create_plan(data, job_path, config, artifacts):
     if not config:
         raise ValueError("管理员尚未配置 AI 服务")
-    evidence = make_evidence(artifacts, job_path, data["start"], data["end"], data.get("note_ids", []))
-    question = "根据这一段演奏的分析数据，安排针对换指、节奏和复练的练习计划。"
-    sources = related_sources(question)
+    if data.get("scope") == "full":
+        overview_path = job_path / "overview.json"
+        overview = artifacts.read_json(overview_path) if overview_path.is_file() else {}
+        if overview.get("status") != "answered":
+            raise ValueError("请先生成全曲评价，再创建练习计划")
+        summary = artifacts.read_json(job_path / "analysis_summary.json")
+        evidence = make_evidence(artifacts, job_path, 0, summary["video_duration_seconds"], [])
+        evidence["overall_evaluation"] = overview["answer"]
+        question = "根据 overall_evaluation 中的全曲评价，按优先级安排每次练习的项目，给出练法、重复次数和可检查的完成目标。"
+    else:
+        evidence = make_evidence(artifacts, job_path, data["start"], data["end"], data.get("note_ids", []))
+        question = "根据这一段演奏的分析数据，安排针对换指、节奏和复练的练习计划。"
+    sources = related_sources(question, evidence)
     answer = ask_model(question, evidence, sources, config, plan=True)
     if answer.startswith("```") and answer.endswith("```") and "\n" in answer:
         answer = answer.split("\n", 1)[1][:-3].strip()
@@ -168,6 +230,30 @@ class CoachService:
     def __init__(self, database, artifacts):
         self.database = database
         self.artifacts = artifacts
+        self.overview_lock = Lock()
+
+    def overview(self, folder):
+        with self.overview_lock:
+            path = folder / "overview.json"
+            current = self.artifacts.read_json(path) if path.is_file() else {}
+            if current.get("status") == "answered":
+                return current
+            config = self.database.coach_config(decrypt=True)
+            if not config:
+                result = dict(status="configuration_required")
+            else:
+                self.artifacts.write_json(path, {"status": "pending"})
+                try:
+                    summary = self.artifacts.read_json(folder / "analysis_summary.json")
+                    evidence = make_evidence(self.artifacts, folder, 0, summary["video_duration_seconds"], [])
+                    question = "请先给出这次完整演奏的全曲评价，兼顾开头、中段和结尾，再给出优先练习的片段与具体方法。"
+                    sources = related_sources(question, evidence)
+                    result = dict(status="answered", answer=ask_model(question, evidence, sources, config),
+                                  references=sources, created_at=datetime.now(timezone.utc).isoformat())
+                except Exception:
+                    result = dict(status="failed")
+            self.artifacts.write_json(path, result)
+            return result
 
     def configured(self):
         return bool(self.database.coach_config())

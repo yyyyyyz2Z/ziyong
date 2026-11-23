@@ -1,10 +1,13 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {ArrowRight, ChatCircleText, Clock, MusicNotes, PaperPlaneTilt, Play, Plus, Target} from '@phosphor-icons/react';
+import {ArrowRight, ChatCircleText, Clock, MusicNotes, PaperPlaneTilt, Play, CalendarDots} from '@phosphor-icons/react';
 import {api, post, modes, stamp, Panel, Stats, ErrorText} from './workspace-ui';
+import {TechniqueEvidence} from './TechniqueEvidence';
+import {ScoreEvidence} from './ScoreEvidence';
+import {PerformanceOverview} from './PerformanceOverview';
 
 const suggestions = [
   '这段应该怎么安排慢练？',
-  '哪些音符没有识别出指法？',
+  '这几个音的指法怎样衔接更顺畅？',
   '练习这一段时怎么保持节奏稳定？',
 ];
 
@@ -19,9 +22,8 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
   const [context,setContext] = useState(initial || null);
   const [jobId,setJobId] = useState(initial?.job.id || '');
   const [range,setRange] = useState(() => initialRange(initial?.start, initial?.result.summary.video_duration_seconds || 0, initial?.end));
-  const [tab,setTab] = useState('chat');
-  const [selection,setSelection] = useState('time');
-  const [ids,setIds] = useState([]);
+  const [selection,setSelection] = useState(initial?.noteIds?.length ? 'notes' : 'time');
+  const [ids,setIds] = useState(initial?.noteIds || []);
   const [page,setPage] = useState(0);
   const [messages,setMessages] = useState([]);
   const [question,setQuestion] = useState('');
@@ -29,8 +31,7 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
   const [error,setError] = useState('');
   const [notice,setNotice] = useState('');
   const [busy,setBusy] = useState(false);
-  const [plan,setPlan] = useState(null);
-  const [savedIndex,setSavedIndex] = useState([]);
+  const [overviewReady,setOverviewReady] = useState(initial?.result.overview?.status === 'answered');
   const player = useRef(null);
   const stopAt = useRef(null);
   const navigation = useRef(0);
@@ -61,7 +62,7 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
     const request = ++navigation.current;
     setJobId(id); setMessages([]); setError(''); setNotice(''); setContext(null);
     setIds([]); setPage(0); setSelection('time');
-    setPlan(null); setSavedIndex([]);
+    setOverviewReady(false);
     if (!id) return;
     const job = jobs.find(item => item.id === id);
     try {
@@ -85,8 +86,10 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
   const valid = !!context && start >= 0 && end > start && end <= duration + .001
     && (selection === 'time' ? range.every(value => value !== '') : chosen.length > 0);
   const segmentNotes = selection === 'notes' ? chosen : notes.filter(note => note.time >= start && note.time < end);
-  const candidateCount = segmentNotes.filter(note => note.status === 'matched').length;
   const canAsk = (!jobId || valid) && !!question.trim() && !busy;
+  const techniqueAttempts = (context?.result.summary.technique?.attempts || []).filter(attempt =>
+    valid && attempt.start >= start - .001 && attempt.end < end &&
+    (selection !== 'notes' || attempt.note_ids.every(id => ids.includes(id))));
 
   function play(first, last) {
     if (!player.current) return;
@@ -111,35 +114,30 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
   }
 
   async function generatePlan() {
-    if (!valid) return;
-    setNotice(''); setError(''); setBusy(true); setPlan(null); setSavedIndex([]);
-    try {
-      setPlan(await post('/jobs/' + jobId + '/practice-plan',{start,end,note_ids: selection === 'notes' ? ids : []}));
-    } catch (e) {setError(e.message);}
-    finally {setBusy(false);}
-  }
-
-  async function addPractice(item,index) {
+    if (!context || !overviewReady || busy) return;
     setNotice(''); setError(''); setBusy(true);
     try {
-      await post('/practice', {
-        title: item?.title || '片段慢练 · ' + (context.job.title || '演奏 ' + jobId.slice(0,8)).slice(0,85),
-        detail: item?.detail || '先回看片段，选一处换指或节奏难点。低速分手练，稳定后合手，最后录一次对照。',
-        job_id: jobId, start: item ? plan.start : start, end: item ? plan.end : end,
-      });
-      if (item) setSavedIndex(values => [...values,index]);
-      setNotice('已加入练习计划。');
+      const plan = await post('/jobs/' + jobId + '/practice-plan', {scope:'full'});
+      onPractice({generatedCount:plan.items.length, draftId:plan.id, confirmed:plan.status === 'confirmed'});
     } catch (e) {setError(e.message);}
     finally {setBusy(false);}
   }
 
   return <div className="workflow-stack coach-workspace">
-    <div className="workflow-actions coach-tabs">
-      <button className={tab === 'chat' ? 'selected' : ''} onClick={() => setTab('chat')}><ChatCircleText/>片段问答</button>
-      <button className={tab === 'review' ? 'selected' : ''} onClick={() => setTab('review')}><Target/>片段分析与练习</button>
-    </div>
+    {context && <>
+      <PerformanceOverview key={jobId} jobId={jobId} initial={context.result.overview} onReady={setOverviewReady}/>
+      <div className="coach-plan-prompt">
+        <CalendarDots size={28}/>
+        <div><strong>让 AI 为你安排练习</strong>
+          <p>根据全曲评价生成练习建议，编辑并确认后安排到日历。</p></div>
+        <button className="primary" disabled={!configured || !overviewReady || busy} onClick={generatePlan}>
+          {busy ? '正在处理…' : '生成练习建议'}
+        </button>
+        {!overviewReady && <small>全曲评价完成后即可生成练习计划。</small>}
+      </div>
+    </>}
     <div className="coach-grid">
-      <Panel title="演奏证据" action={context && <span className="status-pill">{modes[context.job.mode || 'fingering']}</span>}>
+      <Panel title="选择演奏与片段" action={context && <span className="status-pill">{modes[context.job.mode || 'fingering']}</span>}>
         <label>选择分析任务<select value={jobId} disabled={busy} onChange={e => selectJob(e.target.value)}>
           <option value="">通用钢琴问题</option>
           {jobs.map(job => <option key={job.id} value={job.id}>{job.title || '历史演奏'} · {job.id.slice(0,8)}</option>)}
@@ -186,25 +184,8 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
           <button className="text-button" onClick={openAnalysis}>前往演奏分析 <ArrowRight/></button>
         </div>}
       </Panel>
-      {tab === 'review' ? <Panel title="片段分析与练习">
-        {valid ? <>
-          <Stats items={[[ '音符事件',segmentNotes.length],['几何候选',candidateCount],['未确定',segmentNotes.length - candidateCount]]}/>
-          <p className="subtle">{segmentNotes.length ? '未确定音符适合优先回看，也可能来自遮挡或校准偏差。' : '当前片段没有逐音指法证据，可回放画面制定练习目标。'}</p>
-          <div className="practice-suggestion"><Target size={26}/><div><h4>慢速拆段练习</h4><p>选一处换指或节奏难点，低速分手练，稳定后合手。最后再录一次用于对照。</p></div></div>
-          <div className="workflow-actions">
-            {configured && <button className="primary" disabled={busy} onClick={generatePlan}><Target/>{busy ? '处理中…' : '生成 AI 练习草案'}</button>}
-            <button className="text-button" disabled={busy} onClick={() => addPractice()}><Plus/>加入慢练</button>
-            <button className="text-button" onClick={onPractice}>查看计划 <ArrowRight/></button>
-          </div>
-          {plan && <div className="workflow-list generated-plan">
-            <p className="subtle">AI 练习草案 · {stamp(plan.start)} — {stamp(plan.end)}</p>
-            {plan.items.map((item,index) => <article key={index} className="workflow-row draft-plan-row">
-              <div><strong>{item.title}</strong><p>{item.detail}</p></div>
-              <button className="text-button" disabled={busy || savedIndex.includes(index)} onClick={() => addPractice(item,index)}>{savedIndex.includes(index) ? '已加入' : '加入计划'}</button>
-            </article>)}
-          </div>}
-        </> : <div className="workflow-empty"><Target size={36}/><p>选择演奏任务和片段后，即可查看证据和添加练习。</p></div>}
-      </Panel> : <Panel title="AI 教练" action={<span className={'status-pill ' + (configured ? '' : 'planned')}>{configured ? '模型已配置' : '可保存草稿'}</span>}>
+      <Panel title="片段分析" action={<span className={'status-pill ' + (configured ? '' : 'planned')}>{configured ? 'AI 已连接' : '可保存草稿'}</span>}>
+        {valid && <Stats items={[[ '片段音符',segmentNotes.length],['片段时长',stamp(end - start)]]}/>}
         <div className="question-chips">{suggestions.map(value => <button type="button" key={value} onClick={() => setQuestion(value)}>{value}</button>)}</div>
         <div className="segment-messages" aria-live="polite">
           {!messages.length && <div className="conversation-empty"><ChatCircleText size={34}/><p>你想问哪一段演奏？</p></div>}
@@ -214,6 +195,14 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
             {message.evidence && <button className="segment-reference" onClick={() => play(message.evidence.start,message.evidence.end)}>
               <Play/>{stamp(message.evidence.start)} — {stamp(message.evidence.end)}<small>{message.evidence.total} 个音符</small>
             </button>}
+            {message.evidence?.technique && <TechniqueEvidence attempts={message.evidence.technique.attempts}
+              rules={message.evidence.technique.rules} total={message.evidence.technique.total_attempts}
+              taskLabel={message.evidence.technique.task} repeatability={message.evidence.technique.repeatability}
+              references={message.evidence.technique_references}
+              onPlay={(first,last) => play(first, Math.min(message.evidence.end, last + .15))}/>}
+            {message.evidence?.score_alignment && <ScoreEvidence report={message.evidence.score_alignment}
+              duration={duration} references={message.evidence.score_references}
+              onPlay={time => play(Math.max(message.evidence.start, time - .15), Math.min(message.evidence.end, time + .45))}/>}
             {message.answer && <div className="coach-answer">
               <p className="coach-text">{message.answer}</p>
               <details><summary>提供给模型的练习资料</summary>
@@ -237,9 +226,10 @@ export function SegmentCoach({initial, openAnalysis, onPractice}) {
             {configured && <button className="text-button" type="button" disabled={!canAsk} onClick={e => submit(e,false)}>保存草稿</button>}
             <button className="primary" disabled={!canAsk}><PaperPlaneTilt/>{busy ? '处理中…' : configured ? '发送问题' : '保存问题草稿'}</button>
           </div>
-          {configured && <p className="subtle">发送时，模型服务会收到问题、所选片段的音符摘要和练习资料。</p>}
+          {configured && <p className="subtle">发送时，模型服务会收到问题、片段音符、可用的换指指标和练习资料。</p>}
+          {techniqueAttempts.length > 0 && <p className="subtle" role="status">所选片段含 {techniqueAttempts.length} 遍可引用的换指数据。</p>}
         </form>
-      </Panel>}
+      </Panel>
     </div>
     <ErrorText error={error}/>
     {notice && <p role="status" className="evidence-banner">{notice}<button className="text-button" onClick={() => setNotice('')}>关闭</button></p>}

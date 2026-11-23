@@ -5,6 +5,7 @@
 !backend/api/*.py
 !backend/analysis/
 !backend/analysis/*.py
+!backend/analysis/piano_technique_graph.json
 !backend/repositories/
 !backend/repositories/*.py
 !backend/services/
@@ -20,6 +21,8 @@
 !frontend/src/**
 !frontend/public/
 !frontend/public/**
+frontend/public/keynet.onnx
+frontend/public/keynet-*.part
 !frontend/worker/
 !frontend/worker/**
 !frontend/scripts/

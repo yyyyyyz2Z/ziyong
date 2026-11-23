@@ -23,6 +23,11 @@ class KeyRegion:
     center: float
     bands: tuple
     outline: np.ndarray
+    surface: np.ndarray = None
+    obstructions: tuple = ()
+
+
+CONTACT_SCALE = np.float32([.24, .15])
 
 
 def transform_points(points, matrix):
@@ -42,6 +47,18 @@ def keyboard_regions(mapping, keys):
     keys_by_x = sorted((float(center[0]), pitch) for pitch, center in zip(keys, centers))
     regions = {}
     for i, (x, pitch) in enumerate(keys_by_x):
+        key = keys[pitch]
+        if "surface" in key:
+            # Scale the two axes separately so the existing contact tolerances
+            # are preserved when using the detected key's visible top face.
+            surface = transform_points(key["surface"], to_keyboard) / CONTACT_SCALE
+            # pianoCV's white faces are full rectangles. The black silhouettes
+            # cover the part of the white surface hidden behind raised keys.
+            obstructions = tuple(transform_points(keys[neighbor]["outline"], to_keyboard) / CONTACT_SCALE
+                                 for neighbor in (pitch - 1, pitch + 1)
+                                 if pitch in white_keys and neighbor in keys and neighbor not in white_keys)
+            regions[pitch] = KeyRegion(x, (), np.rint(key["outline"]).astype(np.int32), surface, obstructions)
+            continue
         if pitch in white_keys:
             left, right = x - .5, x + .5
             rear_left = left + BLACK_HALF_WIDTH if i > 0 and keys_by_x[i - 1][1] not in white_keys else left
@@ -75,14 +92,23 @@ def fingertip_scores(row, region, key, to_keyboard):
         return {}
 
     x, y = transform_points(points, to_keyboard).T
-    errors = []
-    for left, right, back, front in region.bands:
-        across = np.maximum(0, np.maximum(left - x, x - right)) / .24
-        along = np.maximum(0, np.maximum(back - y, y - front)) / .15
-        errors.append(across ** 2 + along ** 2)
+    if region.surface is not None:
+        scaled = np.column_stack((x, y)) / CONTACT_SCALE
+        error = np.array([max(0.0, -cv2.pointPolygonTest(region.surface, tuple(map(float, point)), True)) ** 2
+                          for point in scaled])
+        for obstruction in region.obstructions:
+            hidden = [cv2.pointPolygonTest(obstruction, tuple(map(float, point)), False) > 0 for point in scaled]
+            error[hidden] = np.inf
+    else:
+        errors = []
+        for left, right, back, front in region.bands:
+            across = np.maximum(0, np.maximum(left - x, x - right)) / .24
+            along = np.maximum(0, np.maximum(back - y, y - front)) / .15
+            errors.append(across ** 2 + along ** 2)
+        error = np.min(errors, axis=0)
     # The longitudinal position within a key can vary freely. Prefer the center
     # across its width only as a tie-breaker for fingertips near adjacent keys.
-    quality = np.exp(-np.min(errors, axis=0)) * (1 - .18 * np.minimum(abs(x - region.center) / .5, 1))
+    quality = np.exp(-error) * (1 - .18 * np.minimum(abs(x - region.center) / .5, 1))
     pixel_distances = np.linalg.norm(np.asarray(points) - (key["x"], key["y"]), axis=1)
     total_weight = sum(frame_weights.values())
     stats = {}

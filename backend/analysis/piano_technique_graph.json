@@ -1,0 +1,2818 @@
+{
+  "title": "钢琴手部技术评估知识图谱",
+  "version": "1.1.0",
+  "language": "zh-CN",
+  "nodes": [
+    {
+      "id": "B01",
+      "type": "Evidence",
+      "label": "音阶换指的提前准备"
+    },
+    {
+      "id": "B02",
+      "type": "Evidence",
+      "label": "五指任务的运动与时序"
+    },
+    {
+      "id": "B03",
+      "type": "Evidence",
+      "label": "手指协调和伴随运动"
+    },
+    {
+      "id": "B04",
+      "type": "Evidence",
+      "label": "不同速度下的音阶时序"
+    },
+    {
+      "id": "B05",
+      "type": "Evidence",
+      "label": "指法参考的多样性"
+    },
+    {
+      "id": "B06",
+      "type": "Evidence",
+      "label": "水平标签与难度控制"
+    },
+    {
+      "id": "B07",
+      "type": "Evidence",
+      "label": "生物力学结果的适用范围"
+    },
+    {
+      "id": "B08",
+      "type": "Evidence",
+      "label": "手部关键点与视角"
+    },
+    {
+      "id": "B09",
+      "type": "Evidence",
+      "label": "音符和手指的同步识别"
+    },
+    {
+      "id": "B10",
+      "type": "Evidence",
+      "label": "乐谱与演奏的错误对齐"
+    },
+    {
+      "id": "B11",
+      "type": "Evidence",
+      "label": "钢琴教学图谱先例"
+    },
+    {
+      "id": "P01",
+      "type": "Paper",
+      "label": "The biomechanics of piano playing: a systematic review of kinematic, kinetic, and electromyographic literature",
+      "year": 2026,
+      "authors": "Aljoša Jurinić et al.",
+      "title": "The biomechanics of piano playing: a systematic review of kinematic, kinetic, and electromyographic literature",
+      "venue": "Frontiers in Psychology",
+      "url": "https://doi.org/10.3389/fpsyg.2025.1690422",
+      "area": "生物力学综述",
+      "evidence_id": "B07",
+      "finding_zh": "综述纳入53项研究，梳理任务、速度、解剖区域和熟练程度的差异。",
+      "limit_zh": "多项研究采用控制任务或运动捕捉，不能直接外推通用手型阈值。DOI含2025，正式上线日期为2026-01-05。"
+    },
+    {
+      "id": "P02",
+      "type": "Paper",
+      "label": "Anticipatory and sequential motor control in piano playing",
+      "year": 1997,
+      "authors": "K. C. Engel, M. Flanders, J. F. Soechting",
+      "title": "Anticipatory and sequential motor control in piano playing",
+      "venue": "Experimental Brain Research",
+      "url": "https://link.springer.com/article/10.1007/BF02450317",
+      "area": "生物力学实验",
+      "evidence_id": "B01",
+      "finding_zh": "右手音阶拇指穿越可出现提前的运动学准备，出现时机随片段变化。",
+      "limit_zh": "研究中的提前时间是任务内观察，不能直接当作手机视频评分阈值。",
+      "reviewed": true
+    },
+    {
+      "id": "P03",
+      "type": "Paper",
+      "label": "Temporal control and hand movement efficiency in skilled music performance",
+      "year": 2013,
+      "authors": "Werner Goebl, Caroline Palmer",
+      "title": "Temporal control and hand movement efficiency in skilled music performance",
+      "venue": "PLOS ONE",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0050901",
+      "area": "生物力学实验",
+      "evidence_id": "B02",
+      "finding_zh": "熟练者在高速五指旋律任务中的部分关节运动效率指标与打键时序、力度精度有关。",
+      "limit_zh": "原研究使用三维动捕及数字琴，项目的二维轨迹变异不是其原始效率指标。",
+      "reviewed": true
+    },
+    {
+      "id": "P04",
+      "type": "Paper",
+      "label": "Organization of the upper limb movement for piano key-depression differs between expert pianists and novice players",
+      "year": 2008,
+      "authors": "Shinichi Furuya, Hiroshi Kinoshita",
+      "title": "Organization of the upper limb movement for piano key-depression differs between expert pianists and novice players",
+      "venue": "Experimental Brain Research",
+      "url": "https://doi.org/10.1007/s00221-007-1184-9",
+      "area": "生物力学实验",
+      "evidence_id": "B07",
+      "finding_zh": "熟练者与初学者在四种力度的孤立右手八度打键中表现出不同的上肢运动组织。",
+      "limit_zh": "任务为八度打键，涉及肩、肘和腕，不能给五指练习或音阶设置角度阈值。"
+    },
+    {
+      "id": "P05",
+      "type": "Paper",
+      "label": "Hand kinematics of piano playing",
+      "year": 2011,
+      "authors": "Shinichi Furuya, Martha Flanders, John F. Soechting",
+      "title": "Hand kinematics of piano playing",
+      "venue": "Journal of Neurophysiology",
+      "url": "https://doi.org/10.1152/jn.00378.2011",
+      "area": "生物力学实验",
+      "evidence_id": "B03",
+      "finding_zh": "按键指与未按键指的关节协调随演奏指序和上下文变化。",
+      "limit_zh": "描述的是运动组织，不能将所有伴随运动作为错误。"
+    },
+    {
+      "id": "P06",
+      "type": "Paper",
+      "label": "Acquisition of individuated finger movements through musical practice",
+      "year": 2014,
+      "authors": "Shinichi Furuya, A. Nakamura, N. Nagata",
+      "title": "Acquisition of individuated finger movements through musical practice",
+      "venue": "Neuroscience",
+      "url": "https://doi.org/10.1016/j.neuroscience.2014.06.031",
+      "area": "生物力学实验",
+      "evidence_id": "B03",
+      "finding_zh": "研究报告了与钢琴练习相关的手指独立运动差异，且效应与指对有关。",
+      "limit_zh": "实验任务、测量条件和项目的实际打键视频不同。"
+    },
+    {
+      "id": "P07",
+      "type": "Paper",
+      "label": "Playing beautifully when you have to be fast: spatial and temporal symmetries of movement patterns in skilled piano performance at different tempi",
+      "year": 2014,
+      "authors": "Floris T. van Vugt et al.",
+      "title": "Playing beautifully when you have to be fast: spatial and temporal symmetries of movement patterns in skilled piano performance at different tempi",
+      "venue": "Experimental Brain Research",
+      "url": "https://link.springer.com/article/10.1007/s00221-014-4036-4",
+      "area": "生物力学实验",
+      "evidence_id": "B04",
+      "finding_zh": "以不同速度的音阶任务分析打键时序模式及其空间、时间结构。",
+      "limit_zh": "速度会影响可比性，文献没有给出本图谱示例的相对延迟阈值。",
+      "reviewed": true
+    },
+    {
+      "id": "P08",
+      "type": "Paper",
+      "label": "Statistical learning and estimation of piano fingering",
+      "year": 2020,
+      "authors": "Eita Nakamura, Yasuyuki Saito, Kazuyoshi Yoshii",
+      "title": "Statistical learning and estimation of piano fingering",
+      "venue": "Information Sciences",
+      "url": "https://arxiv.org/abs/1904.10237",
+      "area": "指法建模",
+      "evidence_id": "B05",
+      "finding_zh": "量化指法个体差异并用多个参考指法评估预测。",
+      "limit_zh": "提供指法比较依据，不能单凭与某版指法不同判定一般演奏质量。",
+      "reviewed": true
+    },
+    {
+      "id": "P09",
+      "type": "Paper",
+      "label": "Piano Skills Assessment",
+      "year": 2021,
+      "authors": "Paritosh Parmar, Jaiden Reddy, Brendan Morris",
+      "title": "Piano Skills Assessment",
+      "venue": "IEEE MMSP",
+      "url": "https://doi.org/10.1109/MMSP53017.2021.9733638",
+      "area": "自动评价",
+      "evidence_id": "B06",
+      "finding_zh": "提出多模态钢琴水平评估任务，在数据中考虑演奏水平与曲目难度。",
+      "limit_zh": "数据和目标不同于本图谱的逐音符、逐动作教师标签。"
+    },
+    {
+      "id": "P10",
+      "type": "Paper",
+      "label": "MediaPipe Hands: On-device Real-time Hand Tracking",
+      "year": 2020,
+      "authors": "Fan Zhang et al.",
+      "title": "MediaPipe Hands: On-device Real-time Hand Tracking",
+      "venue": "arXiv 预印本",
+      "url": "https://arxiv.org/abs/2006.10214",
+      "area": "视觉测量",
+      "evidence_id": "B08",
+      "finding_zh": "提供单目手部21点追踪方案。",
+      "limit_zh": "关键点质量取决于视角、遮挡和场景。项目示例使用二维指标。",
+      "reviewed": true
+    },
+    {
+      "id": "P11",
+      "type": "Paper",
+      "label": "PianoVAM: A Multimodal Piano Performance Dataset",
+      "year": 2025,
+      "authors": "Yonghyun Kim et al.",
+      "title": "PianoVAM: A Multimodal Piano Performance Dataset",
+      "venue": "ISMIR",
+      "url": "https://ismir2025program.ismir.net/poster_87.html",
+      "area": "数据与对齐",
+      "evidence_id": "B09",
+      "finding_zh": "提供同步视频、音频、MIDI、手部关键点与半自动指法相关资料。",
+      "limit_zh": "适合验证数据处理链路。指法质量和技术问题标签需各自核验。",
+      "reviewed": true
+    },
+    {
+      "id": "P12",
+      "type": "Paper",
+      "label": "PianoMotion10M: Dataset and Benchmark for Hand Motion Generation in Piano Performance",
+      "year": 2025,
+      "authors": "Qijun Gan, Song Wang, Shengtao Wu, Jianke Zhu",
+      "title": "PianoMotion10M: Dataset and Benchmark for Hand Motion Generation in Piano Performance",
+      "venue": "ICLR",
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2025/hash/812c6e27edecd771cc494eb4a06e8927-Abstract-Conference.html",
+      "area": "视觉数据",
+      "evidence_id": "B08",
+      "finding_zh": "提供大规模俯视钢琴视频和手部姿态标注，主要任务是生成演奏动作。",
+      "limit_zh": "生成动作的相似度指标不能直接用作用户技术评分。"
+    },
+    {
+      "id": "P13",
+      "type": "Paper",
+      "label": "Performance Error Detection and Post-Processing for Fast and Accurate Symbolic Music Alignment",
+      "year": 2017,
+      "authors": "Eita Nakamura, Kazuyoshi Yoshii, Haruhiro Katayose",
+      "title": "Performance Error Detection and Post-Processing for Fast and Accurate Symbolic Music Alignment",
+      "venue": "ISMIR",
+      "url": "https://eita-nakamura.github.io/articles/EN_etal_ErrorDetectionAndRealignment_ISMIR2017.pdf",
+      "area": "乐谱对齐",
+      "evidence_id": "B10",
+      "finding_zh": "处理符号音乐对齐中的错音、漏音和多弹音等问题。",
+      "limit_zh": "示例以已对齐数据为输入，尚需接入应用的对齐模块。",
+      "reviewed": true
+    },
+    {
+      "id": "P14",
+      "type": "Paper",
+      "label": "At Your Fingertips: Extracting Piano Fingering Instructions from Videos",
+      "year": 2023,
+      "authors": "Amit Moryossef, Yanai Elazar, Yoav Goldberg",
+      "title": "At Your Fingertips: Extracting Piano Fingering Instructions from Videos",
+      "venue": "arXiv 预印本",
+      "url": "https://arxiv.org/abs/2303.03745",
+      "area": "视觉指法",
+      "evidence_id": "B09",
+      "finding_zh": "从演奏视频与实际音符时间中提取指法，讨论遮挡及同步挑战。",
+      "limit_zh": "其指法识别结果属于论文自己的数据与设置。"
+    },
+    {
+      "id": "P15",
+      "type": "Paper",
+      "label": "Piano Teaching Knowledge Graph Construction Based on Cross-Media Data Analysis and Semantic Network",
+      "year": 2022,
+      "authors": "Han Li",
+      "title": "Piano Teaching Knowledge Graph Construction Based on Cross-Media Data Analysis and Semantic Network",
+      "venue": "Computational Intelligence and Neuroscience",
+      "url": "https://doi.org/10.1155/2022/5499593",
+      "area": "图谱先例",
+      "evidence_id": "B11",
+      "finding_zh": "提出多模态钢琴教学知识图谱。",
+      "limit_zh": "只用于相关工作。项目规则、阈值和评估流程由本原型另行定义。"
+    },
+    {
+      "id": "P16",
+      "type": "Paper",
+      "label": "SKY-Piano: A Multimodal Piano Performance Dataset",
+      "year": 2026,
+      "authors": "Joonhyung Bae et al.",
+      "title": "SKY-Piano: A Multimodal Piano Performance Dataset",
+      "venue": "ISMIR",
+      "url": "https://arxiv.org/abs/2607.27296",
+      "area": "数据与对齐",
+      "evidence_id": "B09",
+      "finding_zh": "有共享练习、专业与业余演奏组、同步视频、动捕、MIDI和乐谱。指法为基于动捕的伪标注。",
+      "limit_zh": "可作参照。组别标签和伪标注均需与教师的逐片段技术标签分别使用。"
+    },
+    {
+      "id": "S01",
+      "type": "Resource",
+      "label": "SUNY Potsdam 常用音阶指法表",
+      "url": "https://www.potsdam.edu/sites/default/files/KeyboardSkillsI.pdf"
+    },
+    {
+      "id": "S02",
+      "type": "Resource",
+      "label": "W3C MusicXML fingering 元素",
+      "url": "https://www.w3.org/2021/06/musicxml40/musicxml-reference/elements/fingering/"
+    },
+    {
+      "id": "S03",
+      "type": "Resource",
+      "label": "SMaPE 视频指法提取工具",
+      "url": "https://petepiet.github.io/SMaPE/"
+    },
+    {
+      "id": "S04",
+      "type": "Resource",
+      "label": "ABRSM 钢琴考纲与评分标准",
+      "url": "https://www.abrsm.org/en-gb/piano"
+    },
+    {
+      "id": "RH1",
+      "type": "Finger",
+      "label": "右手拇指",
+      "hand": "R",
+      "number": 1
+    },
+    {
+      "id": "RH2",
+      "type": "Finger",
+      "label": "右手食指",
+      "hand": "R",
+      "number": 2
+    },
+    {
+      "id": "RH3",
+      "type": "Finger",
+      "label": "右手中指",
+      "hand": "R",
+      "number": 3
+    },
+    {
+      "id": "RH4",
+      "type": "Finger",
+      "label": "右手无名指",
+      "hand": "R",
+      "number": 4
+    },
+    {
+      "id": "RH5",
+      "type": "Finger",
+      "label": "右手小指",
+      "hand": "R",
+      "number": 5
+    },
+    {
+      "id": "K60",
+      "type": "PianoKey",
+      "label": "C4",
+      "pitch_midi": 60
+    },
+    {
+      "id": "K62",
+      "type": "PianoKey",
+      "label": "D4",
+      "pitch_midi": 62
+    },
+    {
+      "id": "K64",
+      "type": "PianoKey",
+      "label": "E4",
+      "pitch_midi": 64
+    },
+    {
+      "id": "K65",
+      "type": "PianoKey",
+      "label": "F4",
+      "pitch_midi": 65
+    },
+    {
+      "id": "K67",
+      "type": "PianoKey",
+      "label": "G4",
+      "pitch_midi": 67
+    },
+    {
+      "id": "K69",
+      "type": "PianoKey",
+      "label": "A4",
+      "pitch_midi": 69
+    },
+    {
+      "id": "K71",
+      "type": "PianoKey",
+      "label": "B4",
+      "pitch_midi": 71
+    },
+    {
+      "id": "K72",
+      "type": "PianoKey",
+      "label": "C5",
+      "pitch_midi": 72
+    },
+    {
+      "id": "T01",
+      "type": "Task",
+      "label": "右手五指上行练习",
+      "hand": "R",
+      "rhythm": "等时值",
+      "articulation": "不指定",
+      "tempo_note": "试点固定每拍一音，60 BPM；阈值需按速度重新校准"
+    },
+    {
+      "id": "T01_N01",
+      "type": "ScoreNote",
+      "label": "C4 · 第1音",
+      "ordinal": 1,
+      "beat": 0,
+      "pitch_midi": 60
+    },
+    {
+      "id": "T01_N02",
+      "type": "ScoreNote",
+      "label": "D4 · 第2音",
+      "ordinal": 2,
+      "beat": 1,
+      "pitch_midi": 62
+    },
+    {
+      "id": "T01_N03",
+      "type": "ScoreNote",
+      "label": "E4 · 第3音",
+      "ordinal": 3,
+      "beat": 2,
+      "pitch_midi": 64
+    },
+    {
+      "id": "T01_N04",
+      "type": "ScoreNote",
+      "label": "F4 · 第4音",
+      "ordinal": 4,
+      "beat": 3,
+      "pitch_midi": 65
+    },
+    {
+      "id": "T01_N05",
+      "type": "ScoreNote",
+      "label": "G4 · 第5音",
+      "ordinal": 5,
+      "beat": 4,
+      "pitch_midi": 67
+    },
+    {
+      "id": "T02",
+      "type": "Task",
+      "label": "右手 C 大调上行（C4–C5）",
+      "hand": "R",
+      "rhythm": "等时值",
+      "articulation": "不指定",
+      "tempo_note": "单手等时值弹奏。多遍复练时固定节拍器速度。",
+      "analysis": "single_hand_scale"
+    },
+    {
+      "id": "T02_N01",
+      "type": "ScoreNote",
+      "label": "C4 · 第1音",
+      "ordinal": 1,
+      "beat": 0,
+      "pitch_midi": 60
+    },
+    {
+      "id": "T02_N02",
+      "type": "ScoreNote",
+      "label": "D4 · 第2音",
+      "ordinal": 2,
+      "beat": 1,
+      "pitch_midi": 62
+    },
+    {
+      "id": "T02_N03",
+      "type": "ScoreNote",
+      "label": "E4 · 第3音",
+      "ordinal": 3,
+      "beat": 2,
+      "pitch_midi": 64
+    },
+    {
+      "id": "T02_N04",
+      "type": "ScoreNote",
+      "label": "F4 · 第4音",
+      "ordinal": 4,
+      "beat": 3,
+      "pitch_midi": 65
+    },
+    {
+      "id": "T02_N05",
+      "type": "ScoreNote",
+      "label": "G4 · 第5音",
+      "ordinal": 5,
+      "beat": 4,
+      "pitch_midi": 67
+    },
+    {
+      "id": "T02_N06",
+      "type": "ScoreNote",
+      "label": "A4 · 第6音",
+      "ordinal": 6,
+      "beat": 5,
+      "pitch_midi": 69
+    },
+    {
+      "id": "T02_N07",
+      "type": "ScoreNote",
+      "label": "B4 · 第7音",
+      "ordinal": 7,
+      "beat": 6,
+      "pitch_midi": 71
+    },
+    {
+      "id": "T02_N08",
+      "type": "ScoreNote",
+      "label": "C5 · 第8音",
+      "ordinal": 8,
+      "beat": 7,
+      "pitch_midi": 72
+    },
+    {
+      "id": "X01",
+      "type": "Transition",
+      "label": "E4→F4，右手 3→1",
+      "from_note": "T02_N03",
+      "to_note": "T02_N04",
+      "expected_fingers": [
+        3,
+        1
+      ]
+    },
+    {
+      "id": "D01",
+      "type": "Dimension",
+      "label": "音符准确性"
+    },
+    {
+      "id": "D02",
+      "type": "Dimension",
+      "label": "指定指法执行"
+    },
+    {
+      "id": "D03",
+      "type": "Dimension",
+      "label": "局部时序控制"
+    },
+    {
+      "id": "D04",
+      "type": "Dimension",
+      "label": "换指动作准备"
+    },
+    {
+      "id": "D05",
+      "type": "Dimension",
+      "label": "手指动作与重复性"
+    },
+    {
+      "id": "D06",
+      "type": "Dimension",
+      "label": "测量质量"
+    },
+    {
+      "id": "M01",
+      "type": "Metric",
+      "label": "漏音、错音、多弹音数量",
+      "unit": "counts",
+      "definition": "按已对齐的音符事件分类计数。同一音高的重复出现按各自的谱面音符 ID 区分。",
+      "input": "实际演奏事件＋乐谱"
+    },
+    {
+      "id": "M02",
+      "type": "Metric",
+      "label": "换指两音的参考指法比较",
+      "unit": "per_note",
+      "definition": "保留两个打键的参考指法及有几何支持的观察值，候选未知时使用空值。",
+      "input": "同期 MIDI＋手部视频＋参考指法"
+    },
+    {
+      "id": "M03",
+      "type": "Metric",
+      "label": "目标换指的相对起音间隔",
+      "unit": "ratio",
+      "definition": "目标音起音减去前音起音，除以同遍其余相邻等时值音符的起音间隔中位数。",
+      "input": "同期 MIDI＋参考音阶"
+    },
+    {
+      "id": "M04",
+      "type": "Metric",
+      "label": "落键指的准备提前量",
+      "unit": "ms",
+      "definition": "实际落键起音减去估计的持续靠近目标键的首帧时间，保留帧率与覆盖率供复核。",
+      "input": "手部视频＋同期 MIDI＋键位"
+    },
+    {
+      "id": "M05",
+      "type": "Metric",
+      "label": "非打键指的相对位移",
+      "unit": "palm_width",
+      "definition": "在指序、视角与速度一致的窗口内，手掌坐标系中的非打键指尖位置相对窗口起点的最大距离，除以该窗口掌宽中位数。按指对保留结果。",
+      "input": "手部视频"
+    },
+    {
+      "id": "M06",
+      "type": "Metric",
+      "label": "重复演奏的指尖轨迹差异",
+      "unit": "key_width",
+      "definition": "同机位下，对齐同一音符和同一指法的打键窗。保留围绕起音的统一时间轴，计算每帧关键点相对于各遍中位轨迹的距离，再以同平面参考白键宽归一化。",
+      "input": "手部视频＋实际演奏起音"
+    },
+    {
+      "id": "M07",
+      "type": "Metric",
+      "label": "换指间隔比例的跨遍差异",
+      "unit": "ratio",
+      "definition": "逐遍先以各自的基准间隔归一化，再计算比例的中位数和中位绝对偏差，同时记录基准范围。",
+      "input": "同一练习的多遍同期 MIDI"
+    },
+    {
+      "id": "M08",
+      "type": "Metric",
+      "label": "关键点窗口可用率",
+      "unit": "proportion",
+      "definition": "目标手指和手部定位所需的核心点通过跟踪、遮挡和身份检查的帧数，除以分析窗口总帧数。该数值由项目质量规则计算。",
+      "input": "手部视频"
+    },
+    {
+      "id": "F01",
+      "type": "Feedback",
+      "label": "回看错音、漏音或多弹音位置",
+      "advice": "先慢速单独练习对应音符，再连回相邻两音。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F02",
+      "type": "Feedback",
+      "label": "核对本练习的参考指法",
+      "advice": "显示实际和参考指号。若采用老师认可的替代方案，更新本任务参考。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F03",
+      "type": "Feedback",
+      "label": "回看 E4→F4 的反复放慢",
+      "advice": "分开慢练 E4→F4，也可以从 D4 连到 G4，再录一遍复测。若骨架证据清晰，查看拇指准备窗口。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F04",
+      "type": "Feedback",
+      "label": "观察拇指换指前的准备动作",
+      "advice": "对照慢速示范及本人的多遍视频，让教师确认是否需要调整准备时机。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F05",
+      "type": "Feedback",
+      "label": "复看非打键指的伴随运动",
+      "advice": "请教师结合实际打键和指序复看。伴随运动本身只作为观察项。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F06",
+      "type": "Feedback",
+      "label": "并排观看同一音符的两次打键",
+      "advice": "优先复看轨迹差异最大的窗口，再核对速度、指法、机位和遮挡。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F07",
+      "type": "Feedback",
+      "label": "复看重复演奏之间的时序变化",
+      "advice": "用一致的节拍器设置复练相邻音符，再比较同一位置的起音间隔。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F08",
+      "type": "Feedback",
+      "label": "获取清晰且可同步的视频证据",
+      "advice": "固定机位、把手指和琴键录入画面。遇到遮挡的音符，可补录或由教师复核。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "R01",
+      "type": "Rule",
+      "label": "检查谱面音符错误",
+      "mode": "compare_reference",
+      "logic": "对齐可靠时，记录漏音、错音、多弹音。存在对齐歧义时，标记待复核。",
+      "scope": "音符级",
+      "threshold_status": "无数值评分阈值"
+    },
+    {
+      "id": "R02",
+      "type": "Rule",
+      "label": "核对换指的参考指法",
+      "mode": "compare_reference",
+      "logic": "逐个比较两次打键的几何指法候选与该练习的参考指法。候选缺失时显示未知，差异供回看核对。",
+      "scope": "音符级",
+      "threshold_status": "无数值评分阈值",
+      "availability": "finger_candidates"
+    },
+    {
+      "id": "R03",
+      "type": "Rule",
+      "label": "比较换指处的起音间隔",
+      "mode": "calibration_required",
+      "logic": "计算换指间隔与同遍其余相邻音符间隔中位数的比值。把测量值用于定位复看，正式的局部减速判定需用同速实录和教师标签校准。",
+      "scope": "跨试次＋音符对",
+      "threshold_status": "需校准",
+      "availability": "timing"
+    },
+    {
+      "id": "R04",
+      "type": "Rule",
+      "label": "观察上行拇指的准备时机",
+      "mode": "review_only",
+      "logic": "右手换指符合参考几何候选且画面可用时，描述拇指朝目标键移动的估计起点、位置与二维图像角度。",
+      "scope": "换指窗口",
+      "threshold_status": "无数值评分阈值",
+      "availability": "motion"
+    },
+    {
+      "id": "R05",
+      "type": "Rule",
+      "label": "描述伴随指运动",
+      "mode": "review_only",
+      "logic": "固定任务和指对，对相同速度、同指序下的相对位移做对比。由老师判断动作是否妨碍该任务。",
+      "scope": "打键窗口",
+      "threshold_status": "无数值评分阈值"
+    },
+    {
+      "id": "R06",
+      "type": "Rule",
+      "label": "描述指尖轨迹的重复性",
+      "mode": "review_only",
+      "logic": "同一人、同一指法、同一相机与相近速度下比较多遍。较大差异可定位复看，不能直接推断动作质量。",
+      "scope": "跨试次＋打键窗口",
+      "threshold_status": "无数值评分阈值"
+    },
+    {
+      "id": "R07",
+      "type": "Rule",
+      "label": "比较多遍换指的时间变化",
+      "mode": "review_only",
+      "logic": "比较同一练习各遍换指间隔的归一化比例，保留各遍的速度基准范围。以相同节拍器速度重录可提高比较的可解释性。",
+      "scope": "跨试次＋音符对",
+      "threshold_status": "无数值评分阈值",
+      "availability": "repetition"
+    },
+    {
+      "id": "R08",
+      "type": "Rule",
+      "label": "检查视频证据可用性",
+      "mode": "quality_gate",
+      "logic": "当遮挡、左右手身份不稳、跨模态对齐不可靠或可用帧不足时，将依赖对应证据的结果标为待复核。",
+      "scope": "窗口级",
+      "threshold_status": "需校准",
+      "availability": "timing"
+    },
+    {
+      "id": "rep1",
+      "type": "DemoTrial",
+      "label": "合成演奏 rep1",
+      "synthetic": true
+    },
+    {
+      "id": "rep1_N01",
+      "type": "DemoEvent",
+      "label": "rep1 · C4 · 第1音",
+      "synthetic": true,
+      "event_id": "rep1_N01",
+      "score_note_id": "T02_N01",
+      "status": "matched",
+      "pitch_midi": 60,
+      "onset_video_ms": 4500,
+      "hand": "R",
+      "finger": 1,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N02",
+      "type": "DemoEvent",
+      "label": "rep1 · D4 · 第2音",
+      "synthetic": true,
+      "event_id": "rep1_N02",
+      "score_note_id": "T02_N02",
+      "status": "matched",
+      "pitch_midi": 62,
+      "onset_video_ms": 5495,
+      "hand": "R",
+      "finger": 2,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N03",
+      "type": "DemoEvent",
+      "label": "rep1 · E4 · 第3音",
+      "synthetic": true,
+      "event_id": "rep1_N03",
+      "score_note_id": "T02_N03",
+      "status": "matched",
+      "pitch_midi": 64,
+      "onset_video_ms": 6495,
+      "hand": "R",
+      "finger": 3,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N04",
+      "type": "DemoEvent",
+      "label": "rep1 · F4 · 第4音",
+      "synthetic": true,
+      "event_id": "rep1_N04",
+      "score_note_id": "T02_N04",
+      "status": "matched",
+      "pitch_midi": 65,
+      "onset_video_ms": 7695,
+      "hand": "R",
+      "finger": 1,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N05",
+      "type": "DemoEvent",
+      "label": "rep1 · G4 · 第5音",
+      "synthetic": true,
+      "event_id": "rep1_N05",
+      "score_note_id": "T02_N05",
+      "status": "matched",
+      "pitch_midi": 67,
+      "onset_video_ms": 8695,
+      "hand": "R",
+      "finger": 2,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N06",
+      "type": "DemoEvent",
+      "label": "rep1 · A4 · 第6音",
+      "synthetic": true,
+      "event_id": "rep1_N06",
+      "score_note_id": "T02_N06",
+      "status": "matched",
+      "pitch_midi": 69,
+      "onset_video_ms": 9685,
+      "hand": "R",
+      "finger": 3,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N07",
+      "type": "DemoEvent",
+      "label": "rep1 · B4 · 第7音",
+      "synthetic": true,
+      "event_id": "rep1_N07",
+      "score_note_id": "T02_N07",
+      "status": "matched",
+      "pitch_midi": 71,
+      "onset_video_ms": 10685,
+      "hand": "R",
+      "finger": 4,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep1_N08",
+      "type": "DemoEvent",
+      "label": "rep1 · C5 · 第8音",
+      "synthetic": true,
+      "event_id": "rep1_N08",
+      "score_note_id": "T02_N08",
+      "status": "matched",
+      "pitch_midi": 72,
+      "onset_video_ms": 11685,
+      "hand": "R",
+      "finger": 5,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2",
+      "type": "DemoTrial",
+      "label": "合成演奏 rep2",
+      "synthetic": true
+    },
+    {
+      "id": "rep2_N01",
+      "type": "DemoEvent",
+      "label": "rep2 · C4 · 第1音",
+      "synthetic": true,
+      "event_id": "rep2_N01",
+      "score_note_id": "T02_N01",
+      "status": "matched",
+      "pitch_midi": 60,
+      "onset_video_ms": 15300,
+      "hand": "R",
+      "finger": 1,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N02",
+      "type": "DemoEvent",
+      "label": "rep2 · D4 · 第2音",
+      "synthetic": true,
+      "event_id": "rep2_N02",
+      "score_note_id": "T02_N02",
+      "status": "matched",
+      "pitch_midi": 62,
+      "onset_video_ms": 16300,
+      "hand": "R",
+      "finger": 2,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N03",
+      "type": "DemoEvent",
+      "label": "rep2 · E4 · 第3音",
+      "synthetic": true,
+      "event_id": "rep2_N03",
+      "score_note_id": "T02_N03",
+      "status": "matched",
+      "pitch_midi": 64,
+      "onset_video_ms": 17295,
+      "hand": "R",
+      "finger": 3,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N04",
+      "type": "DemoEvent",
+      "label": "rep2 · F4 · 第4音",
+      "synthetic": true,
+      "event_id": "rep2_N04",
+      "score_note_id": "T02_N04",
+      "status": "matched",
+      "pitch_midi": 65,
+      "onset_video_ms": 18490,
+      "hand": "R",
+      "finger": 1,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N05",
+      "type": "DemoEvent",
+      "label": "rep2 · G4 · 第5音",
+      "synthetic": true,
+      "event_id": "rep2_N05",
+      "score_note_id": "T02_N05",
+      "status": "matched",
+      "pitch_midi": 67,
+      "onset_video_ms": 19490,
+      "hand": "R",
+      "finger": 2,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N06",
+      "type": "DemoEvent",
+      "label": "rep2 · A4 · 第6音",
+      "synthetic": true,
+      "event_id": "rep2_N06",
+      "score_note_id": "T02_N06",
+      "status": "matched",
+      "pitch_midi": 69,
+      "onset_video_ms": 20485,
+      "hand": "R",
+      "finger": 3,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N07",
+      "type": "DemoEvent",
+      "label": "rep2 · B4 · 第7音",
+      "synthetic": true,
+      "event_id": "rep2_N07",
+      "score_note_id": "T02_N07",
+      "status": "matched",
+      "pitch_midi": 71,
+      "onset_video_ms": 21485,
+      "hand": "R",
+      "finger": 4,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "rep2_N08",
+      "type": "DemoEvent",
+      "label": "rep2 · C5 · 第8音",
+      "synthetic": true,
+      "event_id": "rep2_N08",
+      "score_note_id": "T02_N08",
+      "status": "matched",
+      "pitch_midi": 72,
+      "onset_video_ms": 22485,
+      "hand": "R",
+      "finger": 5,
+      "finger_quality": "usable"
+    },
+    {
+      "id": "S05",
+      "type": "Resource",
+      "label": "Utah Valley University · Major Scale Fingerings",
+      "url": "https://www.uvu.edu/music/docs/uvu_major_scale_fingerings.pdf",
+      "finding_zh": "提供 C 大调与 G 大调音阶的谱例和指法。项目取其中常用的单八度换指关系。",
+      "limit_zh": "本项目使用单八度、右手、等时值练习。多八度连续弹奏在八度交界处可使用不同指法。",
+      "reviewed": true
+    },
+    {
+      "id": "R09",
+      "type": "Rule",
+      "label": "观察下行中指的准备时机",
+      "availability": "motion",
+      "mode": "review_only",
+      "logic": "右手 1→3 的候选与参考一致、视频可用时，测量中指尖到目标键的横向位置及图像中的远端指间关节角度。准备起点为待复核估计。",
+      "scope": "下行换指窗口",
+      "threshold_status": "需校准"
+    },
+    {
+      "id": "M09",
+      "type": "Metric",
+      "label": "落键指尖到键中心的横向距离",
+      "unit": "white_key_width",
+      "definition": "在校正后的键盘平面中测量指尖横向位置与目标键中心的距离，以白键宽度为单位。",
+      "input": "手部关键点＋逐键位置"
+    },
+    {
+      "id": "M10",
+      "type": "Metric",
+      "label": "落键指的图像投影夹角",
+      "unit": "degree_2d",
+      "definition": "由三处指部关键点计算二维图像夹角，上行用拇指指间关节，下行用中指远端指间关节。",
+      "input": "手部二维关键点"
+    },
+    {
+      "id": "F09",
+      "type": "Feedback",
+      "label": "复练下行 F4→E4",
+      "advice": "先低速练 F4→E4 的 1→3，再把它放进 G4–F4–E4–D4，按同一节拍重录并回看中指接键。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F10",
+      "type": "Feedback",
+      "label": "复练 G 大调上行 B4→C5",
+      "advice": "先在同一节拍下慢练 B4→C5 的 3→1，再连 A4–B4–C5–D5，重录比较换指间隔。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "F11",
+      "type": "Feedback",
+      "label": "核对下行中指接键",
+      "advice": "逐帧回看拇指离开 F4 到中指接 E4 的过程，可和同一人的慢速示范比较。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "T03",
+      "type": "Task",
+      "label": "右手 C 大调下行（C5–C4）",
+      "analysis": "single_hand_scale",
+      "hand": "R",
+      "rhythm": "等时值",
+      "articulation": "不指定",
+      "tempo_note": "单手等时值弹奏。多遍复练时固定节拍器速度。"
+    },
+    {
+      "id": "T03_N01",
+      "type": "ScoreNote",
+      "label": "C5 · 第1音",
+      "ordinal": 1,
+      "beat": 0,
+      "pitch_midi": 72
+    },
+    {
+      "id": "T03_N02",
+      "type": "ScoreNote",
+      "label": "B4 · 第2音",
+      "ordinal": 2,
+      "beat": 1,
+      "pitch_midi": 71
+    },
+    {
+      "id": "T03_N03",
+      "type": "ScoreNote",
+      "label": "A4 · 第3音",
+      "ordinal": 3,
+      "beat": 2,
+      "pitch_midi": 69
+    },
+    {
+      "id": "T03_N04",
+      "type": "ScoreNote",
+      "label": "G4 · 第4音",
+      "ordinal": 4,
+      "beat": 3,
+      "pitch_midi": 67
+    },
+    {
+      "id": "T03_N05",
+      "type": "ScoreNote",
+      "label": "F4 · 第5音",
+      "ordinal": 5,
+      "beat": 4,
+      "pitch_midi": 65
+    },
+    {
+      "id": "T03_N06",
+      "type": "ScoreNote",
+      "label": "E4 · 第6音",
+      "ordinal": 6,
+      "beat": 5,
+      "pitch_midi": 64
+    },
+    {
+      "id": "T03_N07",
+      "type": "ScoreNote",
+      "label": "D4 · 第7音",
+      "ordinal": 7,
+      "beat": 6,
+      "pitch_midi": 62
+    },
+    {
+      "id": "T03_N08",
+      "type": "ScoreNote",
+      "label": "C4 · 第8音",
+      "ordinal": 8,
+      "beat": 7,
+      "pitch_midi": 60
+    },
+    {
+      "id": "X02",
+      "type": "Transition",
+      "label": "F4→E4，右手 1→3",
+      "from_note": "T03_N05",
+      "to_note": "T03_N06",
+      "expected_fingers": [
+        1,
+        3
+      ]
+    },
+    {
+      "id": "T04",
+      "type": "Task",
+      "label": "右手 G 大调上行（G4–G5）",
+      "analysis": "single_hand_scale",
+      "hand": "R",
+      "rhythm": "等时值",
+      "articulation": "不指定",
+      "tempo_note": "单手等时值弹奏。多遍复练时固定节拍器速度。"
+    },
+    {
+      "id": "T04_N01",
+      "type": "ScoreNote",
+      "label": "G4 · 第1音",
+      "ordinal": 1,
+      "beat": 0,
+      "pitch_midi": 67
+    },
+    {
+      "id": "T04_N02",
+      "type": "ScoreNote",
+      "label": "A4 · 第2音",
+      "ordinal": 2,
+      "beat": 1,
+      "pitch_midi": 69
+    },
+    {
+      "id": "T04_N03",
+      "type": "ScoreNote",
+      "label": "B4 · 第3音",
+      "ordinal": 3,
+      "beat": 2,
+      "pitch_midi": 71
+    },
+    {
+      "id": "T04_N04",
+      "type": "ScoreNote",
+      "label": "C5 · 第4音",
+      "ordinal": 4,
+      "beat": 3,
+      "pitch_midi": 72
+    },
+    {
+      "id": "K74",
+      "type": "PianoKey",
+      "label": "D5",
+      "pitch_midi": 74
+    },
+    {
+      "id": "T04_N05",
+      "type": "ScoreNote",
+      "label": "D5 · 第5音",
+      "ordinal": 5,
+      "beat": 4,
+      "pitch_midi": 74
+    },
+    {
+      "id": "K76",
+      "type": "PianoKey",
+      "label": "E5",
+      "pitch_midi": 76
+    },
+    {
+      "id": "T04_N06",
+      "type": "ScoreNote",
+      "label": "E5 · 第6音",
+      "ordinal": 6,
+      "beat": 5,
+      "pitch_midi": 76
+    },
+    {
+      "id": "K78",
+      "type": "PianoKey",
+      "label": "F♯5",
+      "pitch_midi": 78
+    },
+    {
+      "id": "T04_N07",
+      "type": "ScoreNote",
+      "label": "F♯5 · 第7音",
+      "ordinal": 7,
+      "beat": 6,
+      "pitch_midi": 78
+    },
+    {
+      "id": "K79",
+      "type": "PianoKey",
+      "label": "G5",
+      "pitch_midi": 79
+    },
+    {
+      "id": "T04_N08",
+      "type": "ScoreNote",
+      "label": "G5 · 第8音",
+      "ordinal": 8,
+      "beat": 7,
+      "pitch_midi": 79
+    },
+    {
+      "id": "X03",
+      "type": "Transition",
+      "label": "B4→C5，右手 3→1",
+      "from_note": "T04_N03",
+      "to_note": "T04_N04",
+      "expected_fingers": [
+        3,
+        1
+      ]
+    },
+    {
+      "id": "R10",
+      "type": "Rule",
+      "label": "复核局部速度下的起音偏差",
+      "mode": "review_only",
+      "logic": "先用可靠的谱面和实际 MIDI 锚点拟合局部速度，再比较相同音高的对应起音。用偏差标记回看位置，结合谱面和语境解释。"
+    },
+    {
+      "id": "F12",
+      "type": "Feedback",
+      "label": "在局部节拍下复查起音",
+      "advice": "先跟拍或分手慢练相邻音组，复录后比较相同小节和声部中的起音间隔。",
+      "status": "draft_for_teacher_review"
+    },
+    {
+      "id": "M11",
+      "type": "Metric",
+      "label": "相对局部速度的起音偏差",
+      "unit": "ms",
+      "definition": "实际起音减去由相邻锚点插值得到的预期起音。锚点自身的误差可能接近零。",
+      "input": "谱面起音＋同期 MIDI＋局部时间对齐"
+    },
+    {
+      "id": "R11",
+      "type": "Rule",
+      "label": "复核对应谱音的参考指法",
+      "mode": "review_only",
+      "logic": "有同音高对应、谱面标注与可见指法候选时，逐音比较。候选差异用来定位回看。"
+    }
+  ],
+  "edges": [
+    {
+      "source": "P01",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B07"
+    },
+    {
+      "source": "P02",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B01"
+    },
+    {
+      "source": "P03",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B02"
+    },
+    {
+      "source": "P04",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B07"
+    },
+    {
+      "source": "P05",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B03"
+    },
+    {
+      "source": "P06",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B03"
+    },
+    {
+      "source": "P07",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B04"
+    },
+    {
+      "source": "P08",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B05"
+    },
+    {
+      "source": "P09",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B06"
+    },
+    {
+      "source": "P10",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B08"
+    },
+    {
+      "source": "P11",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B09"
+    },
+    {
+      "source": "P12",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B08"
+    },
+    {
+      "source": "P13",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B10"
+    },
+    {
+      "source": "P14",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B09"
+    },
+    {
+      "source": "P15",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B11"
+    },
+    {
+      "source": "P16",
+      "relation": "SUPPORTS_EVIDENCE",
+      "target": "B09"
+    },
+    {
+      "source": "T01",
+      "relation": "HAS_NOTE",
+      "target": "T01_N01"
+    },
+    {
+      "source": "T01_N01",
+      "relation": "REFERS_TO_KEY",
+      "target": "K60"
+    },
+    {
+      "source": "T01_N01",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T01",
+      "relation": "HAS_NOTE",
+      "target": "T01_N02"
+    },
+    {
+      "source": "T01_N02",
+      "relation": "REFERS_TO_KEY",
+      "target": "K62"
+    },
+    {
+      "source": "T01_N02",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T01_N01",
+      "relation": "FOLLOWED_BY",
+      "target": "T01_N02"
+    },
+    {
+      "source": "T01",
+      "relation": "HAS_NOTE",
+      "target": "T01_N03"
+    },
+    {
+      "source": "T01_N03",
+      "relation": "REFERS_TO_KEY",
+      "target": "K64"
+    },
+    {
+      "source": "T01_N03",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T01_N02",
+      "relation": "FOLLOWED_BY",
+      "target": "T01_N03"
+    },
+    {
+      "source": "T01",
+      "relation": "HAS_NOTE",
+      "target": "T01_N04"
+    },
+    {
+      "source": "T01_N04",
+      "relation": "REFERS_TO_KEY",
+      "target": "K65"
+    },
+    {
+      "source": "T01_N04",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "T01_N03",
+      "relation": "FOLLOWED_BY",
+      "target": "T01_N04"
+    },
+    {
+      "source": "T01",
+      "relation": "HAS_NOTE",
+      "target": "T01_N05"
+    },
+    {
+      "source": "T01_N05",
+      "relation": "REFERS_TO_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "T01_N05",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "T01_N04",
+      "relation": "FOLLOWED_BY",
+      "target": "T01_N05"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N01"
+    },
+    {
+      "source": "T02_N01",
+      "relation": "REFERS_TO_KEY",
+      "target": "K60"
+    },
+    {
+      "source": "T02_N01",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N02"
+    },
+    {
+      "source": "T02_N02",
+      "relation": "REFERS_TO_KEY",
+      "target": "K62"
+    },
+    {
+      "source": "T02_N02",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T02_N01",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N02"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N03"
+    },
+    {
+      "source": "T02_N03",
+      "relation": "REFERS_TO_KEY",
+      "target": "K64"
+    },
+    {
+      "source": "T02_N03",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T02_N02",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N03"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N04"
+    },
+    {
+      "source": "T02_N04",
+      "relation": "REFERS_TO_KEY",
+      "target": "K65"
+    },
+    {
+      "source": "T02_N04",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T02_N03",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N04"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N05"
+    },
+    {
+      "source": "T02_N05",
+      "relation": "REFERS_TO_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "T02_N05",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T02_N04",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N05"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N06"
+    },
+    {
+      "source": "T02_N06",
+      "relation": "REFERS_TO_KEY",
+      "target": "K69"
+    },
+    {
+      "source": "T02_N06",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T02_N05",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N06"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N07"
+    },
+    {
+      "source": "T02_N07",
+      "relation": "REFERS_TO_KEY",
+      "target": "K71"
+    },
+    {
+      "source": "T02_N07",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "T02_N06",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N07"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_NOTE",
+      "target": "T02_N08"
+    },
+    {
+      "source": "T02_N08",
+      "relation": "REFERS_TO_KEY",
+      "target": "K72"
+    },
+    {
+      "source": "T02_N08",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "T02_N07",
+      "relation": "FOLLOWED_BY",
+      "target": "T02_N08"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_REFERENCE",
+      "target": "S01"
+    },
+    {
+      "source": "T02",
+      "relation": "HAS_TRANSITION",
+      "target": "X01"
+    },
+    {
+      "source": "X01",
+      "relation": "FROM_NOTE",
+      "target": "T02_N03"
+    },
+    {
+      "source": "X01",
+      "relation": "TO_NOTE",
+      "target": "T02_N04"
+    },
+    {
+      "source": "R01",
+      "relation": "ASSESSES",
+      "target": "D01"
+    },
+    {
+      "source": "R01",
+      "relation": "MEASURES",
+      "target": "M01"
+    },
+    {
+      "source": "R01",
+      "relation": "SUGGESTS",
+      "target": "F01"
+    },
+    {
+      "source": "R01",
+      "relation": "GROUNDED_IN",
+      "target": "B10"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R01"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R01"
+    },
+    {
+      "source": "R02",
+      "relation": "ASSESSES",
+      "target": "D02"
+    },
+    {
+      "source": "R02",
+      "relation": "MEASURES",
+      "target": "M02"
+    },
+    {
+      "source": "R02",
+      "relation": "SUGGESTS",
+      "target": "F02"
+    },
+    {
+      "source": "R02",
+      "relation": "GROUNDED_IN",
+      "target": "B05"
+    },
+    {
+      "source": "R02",
+      "relation": "GROUNDED_IN",
+      "target": "B09"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R02"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R02"
+    },
+    {
+      "source": "R03",
+      "relation": "ASSESSES",
+      "target": "D03"
+    },
+    {
+      "source": "R03",
+      "relation": "MEASURES",
+      "target": "M03"
+    },
+    {
+      "source": "R03",
+      "relation": "GROUNDED_IN",
+      "target": "B04"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R03"
+    },
+    {
+      "source": "R04",
+      "relation": "ASSESSES",
+      "target": "D04"
+    },
+    {
+      "source": "R04",
+      "relation": "MEASURES",
+      "target": "M04"
+    },
+    {
+      "source": "R04",
+      "relation": "SUGGESTS",
+      "target": "F04"
+    },
+    {
+      "source": "R04",
+      "relation": "GROUNDED_IN",
+      "target": "B01"
+    },
+    {
+      "source": "R04",
+      "relation": "GROUNDED_IN",
+      "target": "B08"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R04"
+    },
+    {
+      "source": "R05",
+      "relation": "ASSESSES",
+      "target": "D05"
+    },
+    {
+      "source": "R05",
+      "relation": "MEASURES",
+      "target": "M05"
+    },
+    {
+      "source": "R05",
+      "relation": "SUGGESTS",
+      "target": "F05"
+    },
+    {
+      "source": "R05",
+      "relation": "GROUNDED_IN",
+      "target": "B03"
+    },
+    {
+      "source": "R05",
+      "relation": "GROUNDED_IN",
+      "target": "B07"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R05"
+    },
+    {
+      "source": "R06",
+      "relation": "ASSESSES",
+      "target": "D05"
+    },
+    {
+      "source": "R06",
+      "relation": "MEASURES",
+      "target": "M06"
+    },
+    {
+      "source": "R06",
+      "relation": "SUGGESTS",
+      "target": "F06"
+    },
+    {
+      "source": "R06",
+      "relation": "GROUNDED_IN",
+      "target": "B02"
+    },
+    {
+      "source": "R06",
+      "relation": "GROUNDED_IN",
+      "target": "B07"
+    },
+    {
+      "source": "R06",
+      "relation": "GROUNDED_IN",
+      "target": "B08"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R06"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R06"
+    },
+    {
+      "source": "R07",
+      "relation": "ASSESSES",
+      "target": "D03"
+    },
+    {
+      "source": "R07",
+      "relation": "MEASURES",
+      "target": "M07"
+    },
+    {
+      "source": "R07",
+      "relation": "SUGGESTS",
+      "target": "F07"
+    },
+    {
+      "source": "R07",
+      "relation": "GROUNDED_IN",
+      "target": "B04"
+    },
+    {
+      "source": "R07",
+      "relation": "GROUNDED_IN",
+      "target": "B06"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R07"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R07"
+    },
+    {
+      "source": "R08",
+      "relation": "ASSESSES",
+      "target": "D06"
+    },
+    {
+      "source": "R08",
+      "relation": "MEASURES",
+      "target": "M08"
+    },
+    {
+      "source": "R08",
+      "relation": "SUGGESTS",
+      "target": "F08"
+    },
+    {
+      "source": "R08",
+      "relation": "GROUNDED_IN",
+      "target": "B08"
+    },
+    {
+      "source": "R08",
+      "relation": "GROUNDED_IN",
+      "target": "B09"
+    },
+    {
+      "source": "T01",
+      "relation": "USES_RULE",
+      "target": "R08"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_RULE",
+      "target": "R08"
+    },
+    {
+      "source": "R03",
+      "relation": "LOCATED_AT",
+      "target": "X01"
+    },
+    {
+      "source": "R04",
+      "relation": "LOCATED_AT",
+      "target": "X01"
+    },
+    {
+      "source": "R02",
+      "relation": "REQUIRES_QUALITY_CHECK",
+      "target": "R08"
+    },
+    {
+      "source": "R04",
+      "relation": "REQUIRES_QUALITY_CHECK",
+      "target": "R08"
+    },
+    {
+      "source": "R05",
+      "relation": "REQUIRES_QUALITY_CHECK",
+      "target": "R08"
+    },
+    {
+      "source": "R06",
+      "relation": "REQUIRES_QUALITY_CHECK",
+      "target": "R08"
+    },
+    {
+      "source": "R02",
+      "relation": "USES_REFERENCE",
+      "target": "S02"
+    },
+    {
+      "source": "M02",
+      "relation": "IMPLEMENTATION_REFERENCE",
+      "target": "S03"
+    },
+    {
+      "source": "B06",
+      "relation": "SCOPE_REFERENCE",
+      "target": "S04"
+    },
+    {
+      "source": "rep1",
+      "relation": "PERFORMS",
+      "target": "T02"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N01"
+    },
+    {
+      "source": "rep1_N01",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N01"
+    },
+    {
+      "source": "rep1_N01",
+      "relation": "PLAYS_KEY",
+      "target": "K60"
+    },
+    {
+      "source": "rep1_N01",
+      "relation": "USES_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N02"
+    },
+    {
+      "source": "rep1_N02",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N02"
+    },
+    {
+      "source": "rep1_N02",
+      "relation": "PLAYS_KEY",
+      "target": "K62"
+    },
+    {
+      "source": "rep1_N02",
+      "relation": "USES_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N03"
+    },
+    {
+      "source": "rep1_N03",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N03"
+    },
+    {
+      "source": "rep1_N03",
+      "relation": "PLAYS_KEY",
+      "target": "K64"
+    },
+    {
+      "source": "rep1_N03",
+      "relation": "USES_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N04"
+    },
+    {
+      "source": "rep1_N04",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N04"
+    },
+    {
+      "source": "rep1_N04",
+      "relation": "PLAYS_KEY",
+      "target": "K65"
+    },
+    {
+      "source": "rep1_N04",
+      "relation": "USES_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N05"
+    },
+    {
+      "source": "rep1_N05",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N05"
+    },
+    {
+      "source": "rep1_N05",
+      "relation": "PLAYS_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "rep1_N05",
+      "relation": "USES_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N06"
+    },
+    {
+      "source": "rep1_N06",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N06"
+    },
+    {
+      "source": "rep1_N06",
+      "relation": "PLAYS_KEY",
+      "target": "K69"
+    },
+    {
+      "source": "rep1_N06",
+      "relation": "USES_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N07"
+    },
+    {
+      "source": "rep1_N07",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N07"
+    },
+    {
+      "source": "rep1_N07",
+      "relation": "PLAYS_KEY",
+      "target": "K71"
+    },
+    {
+      "source": "rep1_N07",
+      "relation": "USES_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "rep1",
+      "relation": "HAS_EVENT",
+      "target": "rep1_N08"
+    },
+    {
+      "source": "rep1_N08",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N08"
+    },
+    {
+      "source": "rep1_N08",
+      "relation": "PLAYS_KEY",
+      "target": "K72"
+    },
+    {
+      "source": "rep1_N08",
+      "relation": "USES_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "rep2",
+      "relation": "PERFORMS",
+      "target": "T02"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N01"
+    },
+    {
+      "source": "rep2_N01",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N01"
+    },
+    {
+      "source": "rep2_N01",
+      "relation": "PLAYS_KEY",
+      "target": "K60"
+    },
+    {
+      "source": "rep2_N01",
+      "relation": "USES_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N02"
+    },
+    {
+      "source": "rep2_N02",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N02"
+    },
+    {
+      "source": "rep2_N02",
+      "relation": "PLAYS_KEY",
+      "target": "K62"
+    },
+    {
+      "source": "rep2_N02",
+      "relation": "USES_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N03"
+    },
+    {
+      "source": "rep2_N03",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N03"
+    },
+    {
+      "source": "rep2_N03",
+      "relation": "PLAYS_KEY",
+      "target": "K64"
+    },
+    {
+      "source": "rep2_N03",
+      "relation": "USES_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N04"
+    },
+    {
+      "source": "rep2_N04",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N04"
+    },
+    {
+      "source": "rep2_N04",
+      "relation": "PLAYS_KEY",
+      "target": "K65"
+    },
+    {
+      "source": "rep2_N04",
+      "relation": "USES_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N05"
+    },
+    {
+      "source": "rep2_N05",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N05"
+    },
+    {
+      "source": "rep2_N05",
+      "relation": "PLAYS_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "rep2_N05",
+      "relation": "USES_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N06"
+    },
+    {
+      "source": "rep2_N06",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N06"
+    },
+    {
+      "source": "rep2_N06",
+      "relation": "PLAYS_KEY",
+      "target": "K69"
+    },
+    {
+      "source": "rep2_N06",
+      "relation": "USES_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N07"
+    },
+    {
+      "source": "rep2_N07",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N07"
+    },
+    {
+      "source": "rep2_N07",
+      "relation": "PLAYS_KEY",
+      "target": "K71"
+    },
+    {
+      "source": "rep2_N07",
+      "relation": "USES_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "rep2",
+      "relation": "HAS_EVENT",
+      "target": "rep2_N08"
+    },
+    {
+      "source": "rep2_N08",
+      "relation": "ALIGNS_TO",
+      "target": "T02_N08"
+    },
+    {
+      "source": "rep2_N08",
+      "relation": "PLAYS_KEY",
+      "target": "K72"
+    },
+    {
+      "source": "rep2_N08",
+      "relation": "USES_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "R09",
+      "relation": "ASSESSES",
+      "target": "D04"
+    },
+    {
+      "source": "R09",
+      "relation": "SUGGESTS",
+      "target": "F11"
+    },
+    {
+      "source": "R09",
+      "relation": "GROUNDED_IN",
+      "target": "B02"
+    },
+    {
+      "source": "R09",
+      "relation": "GROUNDED_IN",
+      "target": "B08"
+    },
+    {
+      "source": "R09",
+      "relation": "REQUIRES_QUALITY_CHECK",
+      "target": "R08"
+    },
+    {
+      "source": "R04",
+      "relation": "MEASURES",
+      "target": "M09"
+    },
+    {
+      "source": "R04",
+      "relation": "MEASURES",
+      "target": "M10"
+    },
+    {
+      "source": "R09",
+      "relation": "MEASURES",
+      "target": "M04"
+    },
+    {
+      "source": "R09",
+      "relation": "MEASURES",
+      "target": "M09"
+    },
+    {
+      "source": "R09",
+      "relation": "MEASURES",
+      "target": "M10"
+    },
+    {
+      "source": "T02",
+      "relation": "USES_REFERENCE",
+      "target": "S05"
+    },
+    {
+      "source": "X01",
+      "relation": "SUGGESTS",
+      "target": "F03"
+    },
+    {
+      "source": "R02",
+      "relation": "LOCATED_AT",
+      "target": "X01"
+    },
+    {
+      "source": "R07",
+      "relation": "LOCATED_AT",
+      "target": "X01"
+    },
+    {
+      "source": "R08",
+      "relation": "LOCATED_AT",
+      "target": "X01"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_REFERENCE",
+      "target": "S05"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N01"
+    },
+    {
+      "source": "T03_N01",
+      "relation": "REFERS_TO_KEY",
+      "target": "K72"
+    },
+    {
+      "source": "T03_N01",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N02"
+    },
+    {
+      "source": "T03_N02",
+      "relation": "REFERS_TO_KEY",
+      "target": "K71"
+    },
+    {
+      "source": "T03_N02",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "T03_N01",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N02"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N03"
+    },
+    {
+      "source": "T03_N03",
+      "relation": "REFERS_TO_KEY",
+      "target": "K69"
+    },
+    {
+      "source": "T03_N03",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T03_N02",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N03"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N04"
+    },
+    {
+      "source": "T03_N04",
+      "relation": "REFERS_TO_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "T03_N04",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T03_N03",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N04"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N05"
+    },
+    {
+      "source": "T03_N05",
+      "relation": "REFERS_TO_KEY",
+      "target": "K65"
+    },
+    {
+      "source": "T03_N05",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T03_N04",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N05"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N06"
+    },
+    {
+      "source": "T03_N06",
+      "relation": "REFERS_TO_KEY",
+      "target": "K64"
+    },
+    {
+      "source": "T03_N06",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T03_N05",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N06"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N07"
+    },
+    {
+      "source": "T03_N07",
+      "relation": "REFERS_TO_KEY",
+      "target": "K62"
+    },
+    {
+      "source": "T03_N07",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T03_N06",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N07"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_NOTE",
+      "target": "T03_N08"
+    },
+    {
+      "source": "T03_N08",
+      "relation": "REFERS_TO_KEY",
+      "target": "K60"
+    },
+    {
+      "source": "T03_N08",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T03_N07",
+      "relation": "FOLLOWED_BY",
+      "target": "T03_N08"
+    },
+    {
+      "source": "T03",
+      "relation": "HAS_TRANSITION",
+      "target": "X02"
+    },
+    {
+      "source": "X02",
+      "relation": "FROM_NOTE",
+      "target": "T03_N05"
+    },
+    {
+      "source": "X02",
+      "relation": "TO_NOTE",
+      "target": "T03_N06"
+    },
+    {
+      "source": "X02",
+      "relation": "SUGGESTS",
+      "target": "F09"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_RULE",
+      "target": "R02"
+    },
+    {
+      "source": "R02",
+      "relation": "LOCATED_AT",
+      "target": "X02"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_RULE",
+      "target": "R03"
+    },
+    {
+      "source": "R03",
+      "relation": "LOCATED_AT",
+      "target": "X02"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_RULE",
+      "target": "R09"
+    },
+    {
+      "source": "R09",
+      "relation": "LOCATED_AT",
+      "target": "X02"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_RULE",
+      "target": "R07"
+    },
+    {
+      "source": "R07",
+      "relation": "LOCATED_AT",
+      "target": "X02"
+    },
+    {
+      "source": "T03",
+      "relation": "USES_RULE",
+      "target": "R08"
+    },
+    {
+      "source": "R08",
+      "relation": "LOCATED_AT",
+      "target": "X02"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_REFERENCE",
+      "target": "S05"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N01"
+    },
+    {
+      "source": "T04_N01",
+      "relation": "REFERS_TO_KEY",
+      "target": "K67"
+    },
+    {
+      "source": "T04_N01",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N02"
+    },
+    {
+      "source": "T04_N02",
+      "relation": "REFERS_TO_KEY",
+      "target": "K69"
+    },
+    {
+      "source": "T04_N02",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T04_N01",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N02"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N03"
+    },
+    {
+      "source": "T04_N03",
+      "relation": "REFERS_TO_KEY",
+      "target": "K71"
+    },
+    {
+      "source": "T04_N03",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T04_N02",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N03"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N04"
+    },
+    {
+      "source": "T04_N04",
+      "relation": "REFERS_TO_KEY",
+      "target": "K72"
+    },
+    {
+      "source": "T04_N04",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH1"
+    },
+    {
+      "source": "T04_N03",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N04"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N05"
+    },
+    {
+      "source": "T04_N05",
+      "relation": "REFERS_TO_KEY",
+      "target": "K74"
+    },
+    {
+      "source": "T04_N05",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH2"
+    },
+    {
+      "source": "T04_N04",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N05"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N06"
+    },
+    {
+      "source": "T04_N06",
+      "relation": "REFERS_TO_KEY",
+      "target": "K76"
+    },
+    {
+      "source": "T04_N06",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH3"
+    },
+    {
+      "source": "T04_N05",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N06"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N07"
+    },
+    {
+      "source": "T04_N07",
+      "relation": "REFERS_TO_KEY",
+      "target": "K78"
+    },
+    {
+      "source": "T04_N07",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH4"
+    },
+    {
+      "source": "T04_N06",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N07"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_NOTE",
+      "target": "T04_N08"
+    },
+    {
+      "source": "T04_N08",
+      "relation": "REFERS_TO_KEY",
+      "target": "K79"
+    },
+    {
+      "source": "T04_N08",
+      "relation": "HAS_REFERENCE_FINGER",
+      "target": "RH5"
+    },
+    {
+      "source": "T04_N07",
+      "relation": "FOLLOWED_BY",
+      "target": "T04_N08"
+    },
+    {
+      "source": "T04",
+      "relation": "HAS_TRANSITION",
+      "target": "X03"
+    },
+    {
+      "source": "X03",
+      "relation": "FROM_NOTE",
+      "target": "T04_N03"
+    },
+    {
+      "source": "X03",
+      "relation": "TO_NOTE",
+      "target": "T04_N04"
+    },
+    {
+      "source": "X03",
+      "relation": "SUGGESTS",
+      "target": "F10"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_RULE",
+      "target": "R02"
+    },
+    {
+      "source": "R02",
+      "relation": "LOCATED_AT",
+      "target": "X03"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_RULE",
+      "target": "R03"
+    },
+    {
+      "source": "R03",
+      "relation": "LOCATED_AT",
+      "target": "X03"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_RULE",
+      "target": "R04"
+    },
+    {
+      "source": "R04",
+      "relation": "LOCATED_AT",
+      "target": "X03"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_RULE",
+      "target": "R07"
+    },
+    {
+      "source": "R07",
+      "relation": "LOCATED_AT",
+      "target": "X03"
+    },
+    {
+      "source": "T04",
+      "relation": "USES_RULE",
+      "target": "R08"
+    },
+    {
+      "source": "R08",
+      "relation": "LOCATED_AT",
+      "target": "X03"
+    },
+    {
+      "source": "R10",
+      "relation": "GROUNDED_IN",
+      "target": "B10"
+    },
+    {
+      "source": "R10",
+      "relation": "MEASURES",
+      "target": "M11"
+    },
+    {
+      "source": "R10",
+      "relation": "SUGGESTS",
+      "target": "F12"
+    },
+    {
+      "source": "R11",
+      "relation": "GROUNDED_IN",
+      "target": "B05"
+    },
+    {
+      "source": "R11",
+      "relation": "SUGGESTS",
+      "target": "F02"
+    }
+  ]
+}

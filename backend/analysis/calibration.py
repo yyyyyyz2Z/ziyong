@@ -9,6 +9,7 @@ from .auto_keyboard import detect_keyboard
 
 
 WHITE_PITCH_CLASSES = (0, 2, 4, 5, 7, 9, 11)
+PIANOCV_SOURCES = ("pianocv_auto", "pianocv_crop")
 
 
 def read_frame(video, meta, seconds):
@@ -59,3 +60,40 @@ def keyboard_mapping(corners, width, height, first, last, mirrored):
         corners=corners, key_centers=keys, key_width_pixels=float(np.linalg.norm(points[1] - points[0]) / len(whites)),
         width=width, height=height, mirrored=mirrored, low_pitch=first, high_pitch=last,
     )
+
+
+def pianocv_mapping(source, corners, keys, width, height, mirrored):
+    if source not in PIANOCV_SOURCES or not isinstance(keys, list) or len(keys) != 88:
+        raise ValueError("pianoCV 需要完整的 88 键坐标")
+    mapping = keyboard_mapping(corners, width, height, 21, 108, mirrored)
+    quad = np.asarray(corners, dtype=np.float32)
+    transform = cv2.getPerspectiveTransform(quad, np.float32([[0, 0], [52, 0], [52, 1], [0, 1]]))
+    centers = []
+    projected_x = []
+
+    def polygon(value):
+        points = np.asarray(value, dtype=np.float32)
+        if (points.ndim != 2 or points.shape[1] != 2 or not 3 <= len(points) <= 32
+                or not np.isfinite(points).all() or (points < 0).any()
+                or (points[:, 0] >= width).any() or (points[:, 1] >= height).any()
+                or cv2.contourArea(points) < 1):
+            raise ValueError("pianoCV 琴键轮廓超出画面或形状无效")
+        return points
+
+    for pitch, key in enumerate(keys, 21):
+        if not isinstance(key, dict) or key.get("midi_pitch") != pitch:
+            raise ValueError("pianoCV 琴键编号须从 A0 到 C8 连续排列")
+        outline = polygon(key.get("outline"))
+        surface = polygon(key.get("surface"))
+        moment = cv2.moments(surface)
+        center = (moment["m10"] / moment["m00"], moment["m01"] / moment["m00"])
+        x, y = cv2.perspectiveTransform(np.float32([[center]]), transform)[0, 0]
+        if not (0 <= x <= 52 and -.5 <= y <= 1.1):
+            raise ValueError("pianoCV 琴键与键盘范围不符")
+        projected_x.append(float(x))
+        centers.append(dict(midi_pitch=pitch, x=center[0], y=center[1],
+                            outline=outline.tolist(), surface=surface.tolist()))
+    direction = -1 if mirrored else 1
+    if any((right - left) * direction <= 0 for left, right in zip(projected_x, projected_x[1:])):
+        raise ValueError("pianoCV 琴键顺序异常，请核对取景和水平镜像设置")
+    return dict(mapping, source=source, key_centers=centers)

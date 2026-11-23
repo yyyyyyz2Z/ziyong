@@ -7,6 +7,7 @@ import time
 from contextlib import contextmanager
 from hmac import compare_digest
 from secrets import token_urlsafe
+from uuid import uuid4
 
 import pymysql
 from cryptography.fernet import Fernet
@@ -32,6 +33,13 @@ class WorkspaceDB:
         with self.connect() as db:
             for statement in SCHEMA:
                 db.execute(statement + " ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
+            db.execute("SHOW COLUMNS FROM practice_schedules LIKE 'end_date'")
+            if db.fetchone() is None:
+                try:
+                    db.execute("ALTER TABLE practice_schedules ADD COLUMN end_date CHAR(10)")
+                except pymysql.err.OperationalError as error:
+                    if error.args[0] != 1060:
+                        raise
 
     @contextmanager
     def connect(self):
@@ -160,8 +168,10 @@ class WorkspaceDB:
 
     def practice(self, owner_id):
         with self.connect() as db:
-            db.execute("SELECT * FROM practice WHERE owner_id=%s ORDER BY created_at DESC", (owner_id,))
-            return db.fetchall()
+            db.execute("""SELECT p.*,d.weekdays FROM practice p LEFT JOIN practice_task_days d ON p.id=d.task_id
+                WHERE p.owner_id=%s ORDER BY p.created_at DESC""", (owner_id,))
+            tasks = db.fetchall()
+        return [dict(task, weekdays=json.loads(task["weekdays"]) if task["weekdays"] else []) for task in tasks]
 
     def add_practice(self, task):
         with self.connect() as db:
@@ -169,6 +179,7 @@ class WorkspaceDB:
                 INSERT INTO practice (id,owner_id,title,detail,job_id,start_seconds,end_seconds,created_at)
                 VALUES (%(id)s,%(owner_id)s,%(title)s,%(detail)s,%(job_id)s,%(start_seconds)s,%(end_seconds)s,%(created_at)s)
             """, task)
+            db.execute("INSERT INTO practice_task_days VALUES (%s,%s)", (task["id"], json.dumps(task.get("weekdays", []))))
             return {**task, "completed_at": None}
 
     def change_practice(self, owner_id, task_id, action, values):
@@ -181,11 +192,104 @@ class WorkspaceDB:
                 db.execute("DELETE FROM practice WHERE id=%s AND owner_id=%s", identity)
                 return {"removed": True}
             if action == "edit":
-                db.execute("UPDATE practice SET title=%s,detail=%s WHERE id=%s AND owner_id=%s", (*values, *identity))
+                db.execute("UPDATE practice SET title=%s,detail=%s WHERE id=%s AND owner_id=%s", (*values[:2], *identity))
+                if len(values) > 2 and values[2] is not None:
+                    db.execute("""INSERT INTO practice_task_days VALUES (%s,%s)
+                        ON DUPLICATE KEY UPDATE weekdays=VALUES(weekdays)""", (task_id, json.dumps(values[2])))
             else:
                 db.execute("UPDATE practice SET completed_at=%s WHERE id=%s AND owner_id=%s", (*values, *identity))
             db.execute("SELECT * FROM practice WHERE id=%s AND owner_id=%s", identity)
-            return db.fetchone()
+            result = db.fetchone()
+            db.execute("SELECT weekdays FROM practice_task_days WHERE task_id=%s", (task_id,))
+            assigned = db.fetchone()
+            return dict(result, weekdays=json.loads(assigned["weekdays"]) if assigned else [])
+
+    def practice_calendar(self, owner_id):
+        with self.connect() as db:
+            db.execute("SELECT weekdays,start_date,end_date FROM practice_schedules WHERE owner_id=%s", (owner_id,))
+            schedule = db.fetchone()
+            db.execute("SELECT task_id,practice_date,completed_at FROM practice_checks WHERE owner_id=%s", (owner_id,))
+            checks = db.fetchall()
+        if schedule:
+            schedule["weekdays"] = json.loads(schedule["weekdays"])
+        return {"schedule": schedule, "checks": checks}
+
+    def save_practice_schedule(self, owner_id, weekdays, start_date, end_date=None):
+        with self.connect() as db:
+            db.execute("""INSERT INTO practice_schedules (owner_id,weekdays,start_date,end_date) VALUES (%s,%s,%s,%s)
+                ON DUPLICATE KEY UPDATE weekdays=VALUES(weekdays),start_date=VALUES(start_date),end_date=VALUES(end_date)""",
+                (owner_id, json.dumps(weekdays), start_date, end_date))
+        return {"weekdays": weekdays, "start_date": start_date, "end_date": end_date}
+
+    def practice_drafts(self, owner_id):
+        with self.connect() as db:
+            db.execute("SELECT * FROM practice_plan_drafts WHERE owner_id=%s AND status='pending' ORDER BY created_at DESC", (owner_id,))
+            rows = db.fetchall()
+        return [dict(row, items=json.loads(row["items"])) for row in rows]
+
+    def save_practice_draft(self, draft):
+        with self.connect() as db:
+            db.execute("""INSERT IGNORE INTO practice_plan_drafts
+                (id,owner_id,job_id,source_hash,items,start_seconds,end_seconds,created_at,status,task_ids)
+                VALUES (%(id)s,%(owner_id)s,%(job_id)s,%(source_hash)s,%(items)s,%(start_seconds)s,%(end_seconds)s,%(created_at)s,'pending','[]')""",
+                dict(draft, items=json.dumps(draft["items"], ensure_ascii=False)))
+            db.execute("SELECT * FROM practice_plan_drafts WHERE owner_id=%s AND job_id=%s AND source_hash=%s",
+                       (draft["owner_id"], draft["job_id"], draft["source_hash"]))
+            row = db.fetchone()
+        return dict(row, items=json.loads(row["items"]))
+
+    def confirm_practice_draft(self, owner_id, identifier, items):
+        with self.connect() as db:
+            db.execute("SELECT * FROM practice_plan_drafts WHERE id=%s AND owner_id=%s FOR UPDATE", (identifier, owner_id))
+            draft = db.fetchone()
+            if draft is None:
+                raise ValueError("练习建议不存在")
+            if draft["status"] == "confirmed":
+                return {"task_ids": json.loads(draft["task_ids"]), "status": "confirmed"}
+            tasks = [dict(item, id=uuid4().hex, owner_id=owner_id, job_id=draft["job_id"],
+                          start_seconds=draft["start_seconds"], end_seconds=draft["end_seconds"],
+                          created_at=draft["created_at"]) for item in items]
+            db.executemany("""INSERT INTO practice (id,owner_id,title,detail,job_id,start_seconds,end_seconds,created_at)
+                VALUES (%(id)s,%(owner_id)s,%(title)s,%(detail)s,%(job_id)s,%(start_seconds)s,%(end_seconds)s,%(created_at)s)""", tasks)
+            db.executemany("INSERT INTO practice_task_days VALUES (%s,%s)", [(task["id"],json.dumps(task["weekdays"])) for task in tasks])
+            identifiers = [task["id"] for task in tasks]
+            db.execute("UPDATE practice_plan_drafts SET status='confirmed',task_ids=%s WHERE id=%s AND owner_id=%s",
+                       (json.dumps(identifiers), identifier, owner_id))
+        return {"task_ids": identifiers, "status": "confirmed"}
+
+    def check_practice(self, owner_id, task_id, practice_date, completed_at):
+        with self.connect() as db:
+            db.execute("SELECT id FROM practice WHERE id=%s AND owner_id=%s FOR UPDATE", (task_id, owner_id))
+            if db.fetchone() is None:
+                raise ValueError("练习项目不存在")
+            if completed_at:
+                db.execute("""INSERT INTO practice_checks (owner_id,task_id,practice_date,completed_at)
+                    VALUES (%s,%s,%s,%s) ON DUPLICATE KEY UPDATE completed_at=VALUES(completed_at)""",
+                    (owner_id, task_id, practice_date, completed_at))
+            else:
+                db.execute("DELETE FROM practice_checks WHERE owner_id=%s AND task_id=%s AND practice_date=%s",
+                           (owner_id, task_id, practice_date))
+        return {"task_id": task_id, "practice_date": practice_date, "completed_at": completed_at}
+
+    def practice_batch(self, owner_id, job_id, source_hash):
+        with self.connect() as db:
+            db.execute("SELECT task_ids FROM practice_plan_batches WHERE owner_id=%s AND job_id=%s AND source_hash=%s",
+                       (owner_id, job_id, source_hash))
+            batch = db.fetchone()
+        return json.loads(batch["task_ids"]) if batch else None
+
+    def add_practice_batch(self, owner_id, job_id, source_hash, tasks):
+        with self.connect() as db:
+            # The unique key serializes concurrent saves of the same evaluation.
+            db.execute("""INSERT IGNORE INTO practice_plan_batches (owner_id,job_id,source_hash,task_ids)
+                VALUES (%s,%s,%s,%s)""", (owner_id, job_id, source_hash, json.dumps([task["id"] for task in tasks])))
+            if db.rowcount:
+                db.executemany("""INSERT INTO practice
+                    (id,owner_id,title,detail,job_id,start_seconds,end_seconds,created_at)
+                    VALUES (%(id)s,%(owner_id)s,%(title)s,%(detail)s,%(job_id)s,%(start_seconds)s,%(end_seconds)s,%(created_at)s)""", tasks)
+            db.execute("SELECT task_ids FROM practice_plan_batches WHERE owner_id=%s AND job_id=%s AND source_hash=%s",
+                       (owner_id, job_id, source_hash))
+            return json.loads(db.fetchone()["task_ids"])
 
 
 SCHEMA = (
@@ -220,5 +324,28 @@ SCHEMA = (
         asset_id CHAR(32) PRIMARY KEY, owner_id BIGINT UNSIGNED NOT NULL, created_at VARCHAR(40) NOT NULL,
         payload JSON NOT NULL, INDEX (owner_id, created_at), FOREIGN KEY (owner_id) REFERENCES users(id),
         FOREIGN KEY (asset_id) REFERENCES resources(resource_id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS practice_schedules (
+        owner_id BIGINT UNSIGNED PRIMARY KEY, weekdays JSON NOT NULL, start_date CHAR(10) NOT NULL, end_date CHAR(10),
+        FOREIGN KEY (owner_id) REFERENCES users(id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS practice_checks (
+        owner_id BIGINT UNSIGNED NOT NULL, task_id CHAR(32) NOT NULL, practice_date CHAR(10) NOT NULL,
+        completed_at VARCHAR(40) NOT NULL, PRIMARY KEY (owner_id,task_id,practice_date),
+        FOREIGN KEY (owner_id) REFERENCES users(id), FOREIGN KEY (task_id) REFERENCES practice(id) ON DELETE CASCADE
+    )""",
+    """CREATE TABLE IF NOT EXISTS practice_plan_batches (
+        owner_id BIGINT UNSIGNED NOT NULL, job_id CHAR(32) NOT NULL, source_hash CHAR(64) NOT NULL,
+        task_ids JSON NOT NULL, PRIMARY KEY (owner_id,job_id,source_hash), FOREIGN KEY (owner_id) REFERENCES users(id)
+    )""",
+    """CREATE TABLE IF NOT EXISTS practice_task_days (
+        task_id CHAR(32) PRIMARY KEY, weekdays JSON NOT NULL,
+        FOREIGN KEY (task_id) REFERENCES practice(id) ON DELETE CASCADE
+    )""",
+    """CREATE TABLE IF NOT EXISTS practice_plan_drafts (
+        id CHAR(32) PRIMARY KEY, owner_id BIGINT UNSIGNED NOT NULL, job_id CHAR(32) NOT NULL,
+        source_hash CHAR(64) NOT NULL, items JSON NOT NULL, start_seconds DOUBLE NOT NULL, end_seconds DOUBLE NOT NULL,
+        created_at VARCHAR(40) NOT NULL, status ENUM('pending','confirmed') NOT NULL, task_ids JSON NOT NULL,
+        UNIQUE KEY (owner_id,job_id,source_hash), FOREIGN KEY (owner_id) REFERENCES users(id)
     )""",
 )

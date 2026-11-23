@@ -5,6 +5,8 @@ __pycache__/
 *.py[cod]
 frontend/node_modules/
 frontend/dist/
+frontend/public/keynet.onnx
+frontend/public/keynet-*.part
 pianocv_lab/node_modules/
 pianocv_lab/dist/
 pianocv_lab/public/keynet.onnx

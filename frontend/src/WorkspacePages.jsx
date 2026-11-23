@@ -1,97 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {ArrowRight, CheckCircle, DownloadSimple, MagnifyingGlass, MusicNotes, Plus, ShieldCheck, SignIn, SignOut, UserCircle} from '@phosphor-icons/react';
+import React, {useEffect, useRef, useState} from 'react';
+import {ArrowRight, Books, CalendarDots, CheckCircle, Clock, DownloadSimple, Eye, EyeSlash, LockKey,
+  MagnifyingGlass, MusicNotes, Plus, ShieldCheck, SignIn, SignOut, UploadSimple, UserCircle, X} from '@phosphor-icons/react';
 import {api, post, uploadAsset, Panel, Stats, stamp, ErrorText} from './workspace-ui';
 
-export function PracticePage({onOpenClip}) {
-  const [tasks,setTasks] = useState([]);
-  const [title,setTitle] = useState('');
-  const [detail,setDetail] = useState('');
-  const [editing,setEditing] = useState(null);
-  const [removing,setRemoving] = useState(null);
-  const [busy,setBusy] = useState(false);
-  const [error,setError] = useState('');
-  useEffect(() => {
-    api('/practice').then(setTasks).catch(e => setError(e.message));
-  }, []);
-  const complete = tasks.filter(task => task.completed_at).length;
-
-  async function add(event) {
-    event.preventDefault();
-    setError(''); setBusy(true);
-    try {
-      const task = await post(editing ? '/practice/' + editing + '/edit' : '/practice',{title,detail});
-      setTasks(items => editing ? items.map(item => item.id === editing ? task : item) : [task,...items]);
-      setTitle(''); setDetail('');
-      setEditing(null);
-    } catch (e) {setError(e.message);}
-    finally {setBusy(false);}
-  }
-
-  async function toggle(task) {
-    setError(''); setBusy(true);
-    try {
-      const updated = await post('/practice/' + task.id + '/complete',{completed: !task.completed_at});
-      setTasks(items => items.map(item => item.id === task.id ? updated : item));
-    } catch (e) {setError(e.message);}
-    finally {setBusy(false);}
-  }
-
-  async function remove(task) {
-    setError(''); setBusy(true);
-    try {
-      await post('/practice/' + task.id + '/remove',{});
-      setTasks(items => items.filter(item => item.id !== task.id));
-      setRemoving(null);
-      if (editing === task.id) {setEditing(null); setTitle(''); setDetail('');}
-    } catch (e) {setError(e.message);}
-    finally {setBusy(false);}
-  }
-
-  return <div className="workflow-stack">
-    <ErrorText error={error}/>
-    <div className="analysis-grid">
-      <Panel title="练习清单">
-        <Stats items={[[ '待练习',tasks.length - complete],['已完成',complete]]}/>
-        {tasks.length ? <div className="workflow-list">{tasks.map(task => <article className="workflow-row practice-row" key={task.id}>
-          <input type="checkbox" aria-label={'完成 ' + task.title} checked={!!task.completed_at} disabled={busy} onChange={() => toggle(task)}/>
-          <div><strong>{task.title}</strong><p>{task.detail}</p>
-            {task.completed_at && <small>完成于 {new Date(task.completed_at).toLocaleDateString('zh-CN')}</small>}
-            <div className="workflow-actions">
-              {task.job_id && <button className="text-button" disabled={busy} onClick={async () => {
-                setError(''); setBusy(true);
-                try {await onOpenClip(task);}
-                catch (e) {setError(e.message);}
-                finally {setBusy(false);}
-              }}>回看 {stamp(task.start_seconds)} <ArrowRight/></button>}
-              <button className="text-button" disabled={busy} onClick={() => {setEditing(task.id); setTitle(task.title); setDetail(task.detail);}}>编辑</button>
-              {removing === task.id
-                ? <><button className="text-button danger" disabled={busy} onClick={() => remove(task)}>确认删除</button><button className="text-button" onClick={() => setRemoving(null)}>取消</button></>
-                : <button className="text-button danger" disabled={busy} onClick={() => setRemoving(task.id)}>删除</button>}
-            </div>
-          </div>
-        </article>)}</div> : <div className="workflow-empty"><CheckCircle size={32}/><p>添加自己的练习，也可以从教练页把演奏片段加入清单。</p></div>}
-      </Panel>
-      <Panel title={editing ? '编辑练习' : '添加练习'}>
-        <form onSubmit={add}>
-          <label>练习名称<input maxLength={120} value={title} onChange={e => setTitle(e.target.value)} placeholder="例如，右手换指慢练"/></label>
-          <label>练习目标<textarea className="workflow-textarea" maxLength={1200} value={detail} onChange={e => setDetail(e.target.value)} placeholder="记录片段、目标速度或复练方法"/></label>
-          <div className="workflow-actions">
-            <button className="primary" disabled={busy || !title.trim()}><Plus/>{editing ? '保存修改' : '加入清单'}</button>
-            {editing && <button type="button" className="text-button" onClick={() => {setEditing(null); setTitle(''); setDetail('');}}>取消编辑</button>}
-          </div>
-        </form>
-      </Panel>
-    </div>
-  </div>;
-}
+export {PracticePage} from './PracticeCalendar';
 
 export function LibraryPage({onReference}) {
   const [assets,setAssets] = useState([]);
   const [query,setQuery] = useState('');
+  const [loading,setLoading] = useState(true);
+  const [loadError,setLoadError] = useState('');
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState('');
   useEffect(() => {
-    api('/library').then(setAssets).catch(e => setError(e.message));
+    let live = true;
+    api('/library').then(items => {if (live) setAssets(items);})
+      .catch(e => {if (live) setLoadError(e.message);})
+      .finally(() => {if (live) setLoading(false);});
+    return () => {live = false;};
   }, []);
   const visible = assets.filter(asset => asset.name.toLowerCase().includes(query.trim().toLowerCase()));
 
@@ -107,28 +33,38 @@ export function LibraryPage({onReference}) {
     finally {setBusy(false);}
   }
 
-  return <div className="workflow-stack">
-    <Panel title="MIDI 曲库">
-      <div className="workflow-actions library-search">
-        <label className="search"><MagnifyingGlass/><input aria-label="搜索曲库" value={query} onChange={e => setQuery(e.target.value)} placeholder="按文件名搜索"/></label>
-        <label className="primary workflow-file-button"><Plus/>{busy ? '正在导入…' : '导入 MIDI'}
-          <input aria-label="导入 MIDI" type="file" accept=".mid,.midi" disabled={busy} onChange={upload}/>
-        </label>
+  return <Panel title={<span className="library-heading"><Books size={23} weight="duotone"/>参考 MIDI</span>} className="library-panel"
+    action={<label className="primary workflow-file-button library-import"><UploadSimple/>{busy ? '正在导入…' : '导入 MIDI'}
+      <input aria-label="导入 MIDI" type="file" accept=".mid,.midi" disabled={loading || busy} onChange={upload}/>
+    </label>}>
+      <div className="library-search">
+        <label className="search"><MagnifyingGlass size={19}/><input type="search" aria-label="搜索曲库" value={query} onChange={e => setQuery(e.target.value)} placeholder="按文件名搜索"/></label>
+        {!loading && !loadError && <span className="library-count" role="status">{query.trim() ? `${visible.length} / ${assets.length} 首曲目` : `${assets.length} 首曲目`}</span>}
       </div>
+      <ErrorText error={loadError}/>
       <ErrorText error={error}/>
-      {!!visible.length && <div className="library-grid">
+      {visible.length > 0 && <div className="library-grid">
         {visible.map(asset => <article className="library-card" key={asset.id}>
-          <MusicNotes size={29}/><h4>{asset.name}</h4>
-          <p>{asset.notes} 个音符 · {stamp(asset.duration)} · 音域 {asset.minimum}–{asset.maximum}</p>
-          <div className="workflow-actions">
-            <button className="text-button" onClick={() => onReference(asset)}>用作对照乐谱 <ArrowRight/></button>
-            <a className="text-button" href={'/api/assets/' + asset.id + '/midi'} download={asset.name}><DownloadSimple/>下载</a>
+          <div className="library-card-heading"><span className="library-icon"><MusicNotes size={24} weight="duotone"/></span><h4>{asset.name}</h4></div>
+          <dl className="library-meta">
+            <div><dt>时长</dt><dd>{stamp(asset.duration)}</dd></div>
+            <div><dt>音符数</dt><dd>{asset.notes}</dd></div>
+            <div><dt>音域</dt><dd>{asset.minimum}–{asset.maximum}</dd></div>
+          </dl>
+          <div className="library-card-actions">
+            <button className="text-button" onClick={() => onReference(asset)}>用作对照 <ArrowRight size={15}/></button>
+            <a className="text-button" href={'/api/assets/' + asset.id + '/midi'} download={asset.name} aria-label={'下载 ' + asset.name}><DownloadSimple size={17}/>下载</a>
           </div>
         </article>)}
       </div>}
-      {!visible.length && <div className="workflow-empty"><MusicNotes size={34}/><p>{assets.length ? '没有匹配的曲目。' : '导入 MIDI 后，可在音频转录中用作参考乐谱。'}</p></div>}
-    </Panel>
-  </div>;
+      {loading && <div className="workflow-empty library-empty" role="status">正在读取曲库…</div>}
+      {!loading && !loadError && !visible.length && <div className="workflow-empty library-empty">
+        {query.trim() ? <MagnifyingGlass size={34}/> : <MusicNotes size={34} weight="duotone"/>}
+        <strong>{query.trim() ? '没有匹配的曲目' : '曲库还没有曲目'}</strong>
+        <p>{query.trim() ? '试试更短的文件名关键词。' : '导入 .mid 或 .midi 文件，即可在音频转录中用作参考乐谱。'}</p>
+        {query.trim() && <button className="text-button" onClick={() => setQuery('')}>清除搜索</button>}
+      </div>}
+    </Panel>;
 }
 
 function AdminSettings() {
@@ -170,27 +106,72 @@ function AdminSettings() {
     </Panel>;
 }
 
-export function AccountPage({account,logout,open}) {
+export function AccountDrawer({account,logout,onClose,onNavigate,onHistory}) {
   const [error,setError] = useState('');
   const [busy,setBusy] = useState(false);
-  return <div className="admin-grid">
-    <Panel title="我的账号" action={<UserCircle size={28}/>}>
-      <div className="account-identity">
-        <strong>{account.username}</strong><span className="status-pill">{account.role === 'admin' ? '管理员' : '普通用户'}</span>
+  const dialog = useRef(null);
+  const closeButton = useRef(null);
+  useEffect(() => {
+    const element = dialog.current;
+    element.showModal();
+    closeButton.current.focus();
+    return () => element.close();
+  }, []);
+  const shortcuts = [
+    [Clock, '历史演奏', '打开分析记录和回放', onHistory],
+    [CalendarDots, '我的练习', '管理练习清单和完成记录', () => onNavigate('practice')],
+    [Books, '我的曲库', '查看已导入的参考 MIDI', () => onNavigate('library')],
+  ];
+
+  return <dialog ref={dialog} className="account-drawer" aria-labelledby="account-drawer-title"
+    onCancel={event => {event.preventDefault(); onClose();}}
+    onClick={event => {if (event.target === event.currentTarget) onClose();}}>
+    <div className="drawer-shell">
+      <div className="drawer-heading">
+        <h2 id="account-drawer-title">个人中心</h2>
+        <button ref={closeButton} className="drawer-close" aria-label="关闭个人中心" onClick={onClose}><X size={20}/></button>
       </div>
-      <div className="workflow-actions account-links">
-        <button className="text-button" onClick={() => open('analysis')}>历史演奏 <ArrowRight/></button>
-        <button className="text-button" onClick={() => open('practice')}>我的练习 <ArrowRight/></button>
+      <div className="drawer-body">
+        <div className="account-identity">
+          <span className="account-avatar" aria-hidden="true">{account.username[0]?.toUpperCase()}</span>
+          <div><strong>{account.username}</strong><span className="status-pill">{account.role === 'admin' ? '管理员' : '普通用户'}</span></div>
+        </div>
+        <div className="account-links">
+          {shortcuts.map(([Icon,title,detail,action]) => <button key={title} onClick={action}>
+            <span className="account-link-icon"><Icon size={20} weight="duotone"/></span>
+            <span><strong>{title}</strong><small>{detail}</small></span><ArrowRight size={16}/>
+          </button>)}
+        </div>
+        {account.role === 'admin' && <AdminSettings/>}
       </div>
-      <button className="glass-button" disabled={busy} onClick={async () => {
-        setError(''); setBusy(true);
-        try {await logout();}
-        catch (e) {setError(e.message);}
-        finally {setBusy(false);}
-      }}><SignOut/>退出登录</button>
-      <ErrorText error={error}/>
-    </Panel>
-    {account.role === 'admin' && <AdminSettings/>}
+      <div className="drawer-footer">
+        <ErrorText error={error}/>
+        <button disabled={busy} onClick={async () => {
+          setError(''); setBusy(true);
+          try {await logout();}
+          catch (e) {setError(e.message);}
+          finally {setBusy(false);}
+        }}><SignOut size={19}/>{busy ? '正在退出…' : '退出登录'}</button>
+      </div>
+    </div>
+  </dialog>;
+}
+
+function AuthField({name,label,icon: Icon,type = 'text',value,onChange,onBlur,autoComplete,hint,error,disabled}) {
+  const [revealed,setRevealed] = useState(false);
+  const password = type === 'password';
+  return <div className="auth-field">
+    <label htmlFor={'auth-' + name}>{label}</label>
+    <div className="auth-control">
+      <Icon size={19} aria-hidden="true"/>
+      <input id={'auth-' + name} name={name} type={revealed ? 'text' : type} value={value} autoComplete={autoComplete}
+        autoCapitalize={password ? undefined : 'none'} spellCheck={false} required disabled={disabled}
+        aria-invalid={Boolean(error)} aria-describedby={'auth-' + name + '-feedback'} onChange={onChange} onBlur={onBlur}/>
+      {password && <button type="button" aria-label={(revealed ? '隐藏' : '显示') + label} disabled={disabled} onClick={() => setRevealed(!revealed)}>
+        {revealed ? <EyeSlash size={19}/> : <Eye size={19}/>}
+      </button>}
+    </div>
+    <p id={'auth-' + name + '-feedback'} className={error ? 'auth-feedback invalid' : 'auth-feedback'} aria-live="polite">{error || hint}</p>
   </div>;
 }
 
@@ -201,32 +182,64 @@ export function AuthPage({onAccount}) {
   const [confirm,setConfirm] = useState('');
   const [busy,setBusy] = useState(false);
   const [error,setError] = useState('');
+  const [touched,setTouched] = useState({});
   const registering = type === 'register';
+  const usernameRule = '3–32 个字符，支持字母、数字、下划线和短横线';
+  const passwordRule = '8–128 个字符';
+  const passwordLength = Array.from(password).length;
+  const errors = {
+    username: !username.trim() ? '请输入用户名。' : /^[A-Za-z0-9_-]{3,32}$/.test(username.trim()) ? '' : '用户名需要 ' + usernameRule + '。',
+    password: !password ? '请输入密码。' : passwordLength < 8 || passwordLength > 128 ? '密码长度需要 ' + passwordRule + '。' : '',
+    confirm: !registering ? '' : !confirm ? '请再次输入密码。' : confirm !== password ? '两次输入的密码不一致。' : '',
+  };
+  function switchType(next) {
+    if (next === type) return;
+    setType(next); setError(''); setTouched({}); setPassword(''); setConfirm('');
+  }
+  function field(name, value, setValue) {
+    return {
+      name, value, disabled: busy,
+      onChange: event => {setValue(event.target.value); setError('');},
+      onBlur: () => setTouched(previous => ({...previous, [name]: true})),
+      error: touched[name] ? errors[name] : '',
+    };
+  }
 
   async function submit(event) {
     event.preventDefault();
     setError('');
-    if (registering && confirm !== password) {setError('两次输入的密码不一致。'); return;}
+    const invalid = Object.keys(errors).find(name => errors[name]);
+    if (invalid) {
+      setTouched({username: true, password: true, confirm: true});
+      event.currentTarget.elements.namedItem(invalid)?.focus();
+      return;
+    }
     setBusy(true);
-    try {onAccount((await post('/auth/' + type,{username,password})).account);}
+    try {onAccount((await post('/auth/' + type,{username: username.trim(),password})).account);}
     catch (e) {setError(e.message);}
     finally {setBusy(false);}
   }
 
   return <div className="auth-layout">
-    <div className="auth-image" aria-hidden="true"/>
-    <Panel title={registering ? '创建账号' : '登录钢琴 AI 教练'} className="auth-panel">
-      <div className="review-filters auth-tabs">
-        <button className={!registering ? 'selected' : ''} disabled={busy} onClick={() => {setType('login'); setError('');}}>登录</button>
-        <button className={registering ? 'selected' : ''} disabled={busy} onClick={() => {setType('register'); setError('');}}>注册</button>
+    <div className="auth-image" aria-hidden="true">
+      <div><MusicNotes size={31} weight="duotone"/><strong>钢琴 AI 教练</strong></div>
+      <p>保存演奏记录，接着上一次练习。</p>
+    </div>
+    <section className="panel workflow-panel auth-panel">
+      <div className="auth-switch" role="group" aria-label="账号操作">
+        <button aria-pressed={!registering} disabled={busy} onClick={() => switchType('login')}>登录</button>
+        <button aria-pressed={registering} disabled={busy} onClick={() => switchType('register')}>注册</button>
       </div>
-      <form onSubmit={submit}>
-        <label>用户名<input autoComplete="username" maxLength={32} value={username} onChange={e => setUsername(e.target.value)} placeholder={registering ? '至少 3 个字母、数字或 _ -' : '输入用户名'} required/></label>
-        <label>密码<input type="password" autoComplete={registering ? 'new-password' : 'current-password'} minLength={registering ? 8 : undefined} maxLength={128} value={password} onChange={e => setPassword(e.target.value)} placeholder={registering ? '至少 8 个字符' : '输入密码'} required/></label>
-        {registering && <label>确认密码<input type="password" autoComplete="new-password" maxLength={128} value={confirm} onChange={e => setConfirm(e.target.value)} required/></label>}
-        <button className="primary wide" disabled={busy}><SignIn/>{busy ? '处理中…' : registering ? '创建账号' : '登录'}</button>
+      <h1>{registering ? '创建账号' : '登录账号'}</h1>
+      <form noValidate onSubmit={submit}>
+        <AuthField {...field('username',username,setUsername)} label="用户名" icon={UserCircle} autoComplete="username" hint={usernameRule}/>
+        <AuthField key={type} {...field('password',password,setPassword)} label="密码" icon={LockKey}
+          type="password" autoComplete={registering ? 'new-password' : 'current-password'} hint={passwordRule}/>
+        {registering && <AuthField {...field('confirm',confirm,setConfirm)} label="确认密码" icon={LockKey}
+          type="password" autoComplete="new-password" hint="再次输入密码"/>}
+        <ErrorText error={error}/>
+        <button className="primary wide" disabled={busy}><SignIn size={19}/>{busy ? '处理中…' : registering ? '创建账号' : '登录'}</button>
       </form>
-      <ErrorText error={error}/>
-    </Panel>
+    </section>
   </div>;
 }

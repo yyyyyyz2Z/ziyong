@@ -7,6 +7,7 @@ from .assets import ASSET_FILES
 
 
 STAGES = {
+    "performance": "提取演奏起音、跟踪手指并关联乐谱",
     "skeleton_only": "提取手部关键点",
     "fingering": "对齐音符并推断指法",
     "audio": "转录视频音轨",
@@ -16,7 +17,9 @@ STAGES = {
 def analysis_command(job, artifacts, folder, video):
     command = [sys.executable, "-m"]
     mode = job["mode"]
-    if mode == "skeleton_only":
+    if mode == "performance":
+        command += ["backend.analysis.performance", "--video", str(video), "--output-dir", str(folder)]
+    elif mode == "skeleton_only":
         command += ["backend.analysis.skeleton_replay", "--video", str(video), "--output-dir", str(folder)]
         if job.get("mirrored"):
             command.append("--mirrored")
@@ -53,6 +56,8 @@ def run_analysis(job, artifacts, root):
             artifacts.write_json(metadata, job)
             convert_replay(folder, video)
         job.update(status="succeeded", stage="完成")
+        if mode == "performance":
+            artifacts.write_json(folder / "overview.json", {"status": "pending"})
     except Exception as exc:
         job.update(status="failed", stage="失败", error=str(exc))
     finally:

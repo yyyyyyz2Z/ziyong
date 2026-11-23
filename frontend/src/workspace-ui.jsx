@@ -26,6 +26,7 @@ export function uploadAsset(kind, file, library = false) {
 }
 
 export const modes = {
+  performance: '弹奏 AI 分析',
   skeleton_only: '手部骨架',
   fingering: '逐音指法',
   audio: '音频转录',
